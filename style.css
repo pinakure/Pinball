@@ -1,0 +1,70 @@
+html {
+    height          : 100%;
+}
+body {
+    background-color: #000;
+    height          : 100%;
+    padding         : 0px;
+    margin          : 0px;
+    overflow        : hidden;
+    text-align      : center;
+}
+
+#display_text ,
+#display_canvas {
+    border          : none;
+    outline         : none;
+    width           : 100%;
+    max-height      : 80px;
+    min-height      : 80px;
+    user-select     : none !important;
+    pointer-events  : none !important;
+    position        : absolute;
+    top             : 0px;
+    left            : 0px;
+    margin          : 0px !important;
+    
+}
+
+#display_canvas {
+    background-color: #442200;
+    z-index         : 0;
+    max-height      : 70px;
+    min-height      : 70px;
+}
+
+#display_text {
+    z-index         : 1;
+    font-family     : 'display';
+    font-size       : 64px;
+    text-align      : center;
+    vertical-align  : top;
+    height          : 96px !important;
+    margin-top      : -12px !important;
+    color           : #ff9900;    
+    background-color: transparent;
+}
+
+canvas {
+    width           : calc(100% / 2);
+    height          : calc(100% - 70px);
+    background-color: #180018;
+    position        : absolute;
+    top             : 70px;
+    left            : calc(100% / 4);
+}
+
+canvas {
+    image-rendering: pixelated;
+}
+
+.blink.slow { animation: blinking 500ms linear 0s infinite alternate;}
+.blink.mid  { animation: blinking 250ms linear 0s infinite alternate;}
+.blink.fast { animation: blinking 125ms linear 0s infinite alternate;}
+
+@keyframes blinking {
+     0%    { opacity: 0%; }
+    47%   { opacity:  0%; }
+    50%   { opacity: 100%; }
+    97%   { opacity: 100%; }
+}
