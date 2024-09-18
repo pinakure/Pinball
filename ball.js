@@ -13,6 +13,7 @@ function polarize(x){
     return -x;
 }
 
+
 Ball.prototype.update = function(){
     /* Solve deltas */
     const BOUNCE_FACTOR_UP      = 1.0;
@@ -41,13 +42,11 @@ Ball.prototype.update = function(){
 
         -delta.y
     */
-    if( Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-    &&  Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-    &&  Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
-    ){ 
-        console.log('A');
-        this.delta.y *= -Math.abs(this.delta.y);
+    /**/ 
+    if(0){
+
     }
+    
     /*--------------------------------------------------------------------------------------*/
     /* B
         .|/
@@ -62,6 +61,7 @@ Ball.prototype.update = function(){
     &&       Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
     &&      !Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
     &&       Table.check( this.x+1, this.y+2, this.delta.x, this.delta.y )
+    &&      (this.delta.y > 0)
     ){ 
         console.log('B');
         this.delta.y *= -1; 
@@ -78,9 +78,10 @@ Ball.prototype.update = function(){
         -delta.x
     */
     else if( Table.check( this.x  , this.y+2, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
+    &&      !Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
+    &&       Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
+    &&       Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
+    &&      (this.delta.y > 0)
     ){ 
         console.log('C');
         this.delta.y *= -1;
@@ -101,6 +102,7 @@ Ball.prototype.update = function(){
         &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
         &&  !Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
         &&   Table.check( this.x+1, this.y+2, this.delta.x, this.delta.y )
+        &&  (this.delta.y > 0)
     ){ 
         console.log('D');
         this.delta.y *= -1; 
@@ -119,6 +121,7 @@ Ball.prototype.update = function(){
         &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
         &&  !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
         &&   Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
+        &&  (this.delta.y > 0)
     ){ 
         console.log('E');
         this.delta.y *= -1; 
@@ -134,13 +137,15 @@ Ball.prototype.update = function(){
         -delta.x
     */
     else if(!Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
+        &&  !Table.check( this.x  , this.y  , this.delta.x, this.delta.y )
+        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
         &&   Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
         &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+        &&  (this.delta.y > 0)
     ){ 
         console.log('F');
         this.delta.y *= -1; 
-        this.delta.x = -Math.abs(this.delta.x);
+        this.delta.x = -Math.abs(this.delta.x)*1.1;
     }
     /*--------------------------------------------------------------------------------------*/
     /* G
@@ -152,10 +157,12 @@ Ball.prototype.update = function(){
     */
     else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
         &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )        
+        //&&  !Table.check( this.x  , this.y  , this.delta.x, this.delta.y )
+        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+        &&  (this.delta.y > 0)        
     ){ 
         console.log('G');
-        this.delta.y *= -1;         
+        this.delta.y = -Math.abs(this.delta.y)*0.55;
     }
     /*--------------------------------------------------------------------------------------*/
     /* H
@@ -172,6 +179,7 @@ Ball.prototype.update = function(){
         &&   Table.check( this.x   , this.y+1 , this.delta.x, this.delta.y )
         &&  !Table.check( this.x+1 , this.y+1 , this.delta.x, this.delta.y )
         &&   Table.check( this.x+1 , this.y+2 , this.delta.x, this.delta.y )        
+        &&  (this.delta.y > 0)
     ){ 
         console.log('H');
         this.delta.x = Math.abs(this.delta.y);
@@ -191,7 +199,8 @@ Ball.prototype.update = function(){
         &&   Table.check( this.x+1 , this.y   , this.delta.x, this.delta.y )
         &&   Table.check( this.x   , this.y+1 , this.delta.x, this.delta.y )
         &&  !Table.check( this.x-1 , this.y+1 , this.delta.x, this.delta.y )
-        &&   Table.check( this.x-1 , this.y+2 , this.delta.x, this.delta.y )        
+        &&   Table.check( this.x-1 , this.y+2 , this.delta.x, this.delta.y )
+        &&  (this.delta.y > 0)        
     ){ 
         console.log('I');
         this.delta.x = -Math.abs(this.delta.y);
@@ -208,6 +217,10 @@ Ball.prototype.update = function(){
     else if( Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
          &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
          &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
+         && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
+         && !Table.check( this.x  , this.y  , this.delta.x, this.delta.y )
+         && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+         &&  (this.delta.y < 0)
     ){ 
         console.log('J');
         this.delta.y = Math.abs(this.delta.y);
@@ -225,6 +238,7 @@ Ball.prototype.update = function(){
          &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
          && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
          &&  Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+         &&  (this.delta.y < 0)
     ){ 
         console.log('K');
         this.delta.y =  Math.abs(this.delta.y);
@@ -243,6 +257,7 @@ Ball.prototype.update = function(){
          &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
          &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
          && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+         &&  (this.delta.y < 0)
     ){ 
         console.log('L');
         this.delta.y = Math.abs(this.delta.y);
@@ -258,7 +273,8 @@ Ball.prototype.update = function(){
     */
     else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
          &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )         
+         &&  Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+         &&  (this.delta.y < 0)        
     ){ 
         console.log('M');
         this.delta.y = Math.abs(this.delta.y);
@@ -276,7 +292,8 @@ Ball.prototype.update = function(){
     else if( Table.check( this.x-1, this.y-2, this.delta.x, this.delta.y )
          && !Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
          &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )         
-         &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )         
+         &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
+         &&  (this.delta.y < 0)        
     ){ 
         console.log('N');
         this.delta.y =-Math.abs(this.delta.y)*0.5;
@@ -294,10 +311,11 @@ Ball.prototype.update = function(){
     */
     else if( Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
          &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y-2, this.delta.x, this.delta.y )         
-         && !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )         
-         && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )         
-         && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )         
+         &&  Table.check( this.x+1, this.y-2, this.delta.x, this.delta.y )
+         && !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
+         && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
+         && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+         &&  (this.delta.y < 0)
     ){ 
         console.log('O');
         this.delta.y = Math.abs(this.delta.y);
@@ -320,6 +338,7 @@ Ball.prototype.update = function(){
         &&  !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
         &&  !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
         &&  !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+        &&  (this.delta.y < 0)
     ){ 
         console.log('P');
         this.delta.y *= Math.abs(this.delta.y); 
@@ -341,6 +360,7 @@ Ball.prototype.update = function(){
         &&   Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
         &&  !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
         &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+        &&  (this.delta.y < 0)
     ){ 
         console.log('Q');
         this.delta.y *= Math.abs(this.delta.y); 
@@ -362,12 +382,23 @@ Ball.prototype.update = function(){
         &&   Table.check( this.x+1, this.y-2, this.delta.x, this.delta.y )
         &&  !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
         &&  !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
+        &&  (this.delta.y < 0)
     ){ 
         console.log('R');
         this.delta.x =  Math.abs(this.delta.y);
         this.delta.y *= 0.5; 
     }
     /*--------------------------------------------------------------------------------------*/
+    else if(    Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
+        &&      Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
+        &&      Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
+        &&     (this.delta.y > 0)
+    ){ 
+        console.log('A');
+        this.delta.y *= -Math.abs(this.delta.y);
+    }
+/*--------------------------------------------------------------------------------------*/
+
 
     
     if( Table.collidesX( this.x, this.y, this.delta.x )

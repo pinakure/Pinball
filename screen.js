@@ -53,4 +53,226 @@ var Screen = {
             }
         }
     },
+
+    getLine : function(x1,y1,x2,y2){
+        var points = [];
+        var dx = x2-x1;
+        var dy = y2-y1;
+        var i1, i2;
+        var x, y;
+        var dd;
+    
+        if (dx >= 0) {
+            if (dy >= 0) {
+                if (dx >= dy) {
+                    if(dx == 0){
+                        points.push([x1, y1]);
+                        return;
+                    }
+                    
+                    i1 = 2 * dy;
+                    dd = i1 - (+ (+ dx));
+                    i2 = dd - (+ (+ dx));
+                    
+                    x = x1;
+                    y = y1;
+                    
+                    while (x <= x2) {
+                        points.push([x, y]);
+    
+                        if (dd >= 0) {
+                            y = y + 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        x = x + 1;
+                    }
+                } else {
+                    if (dy == 0) {
+                        points.push([x1, y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dx;
+                    dd = i1 - (+ (+ dy));
+                    i2 = dd - (+ (+ dy));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (y <= y2) {
+                        points.push([x, y]);
+    
+                        if (dd >= 0) {
+                            x = x + 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        y = y + 1;
+                    }
+                }
+            } else {
+                if (dx >= -dy) {
+                    if (dx == 0) {
+                        points.push([x1, y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dy;
+                    dd = i1 - (-(+dx));
+                    i2 = dd - (-(+dx));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (x <= x2) {
+                        points.push([x,y]);
+    
+                        if (dd <= 0) {
+                            y = y - 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        x = x + 1;
+                    }
+                }
+                else {
+                    if (dy == 0) {
+                        points.push([x1,y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dx;
+                    dd = i1 - (+ (- dy));
+                    i2 = dd - (+ (- dy));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (y >= y2) {
+                        points.push([x,y]);
+    
+                        if (dd >= 0) {
+                            x = x + 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        y = y - 1;
+                    }
+                }
+            }
+        } else {
+            if (dy >= 0) {
+                if (-dx >= dy) {
+                    if (dx == 0) {
+                        points.push([x1,y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dy;
+                    dd = i1 - (+ (- dx));
+                    i2 = dd - (+ (- dx));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (x >= x2) {
+                        points.push([x,y]);
+    
+                        if (dd >= 0) {
+                            y = y + 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        x = x - 1;
+                    }
+                }
+                else {
+                    if (dy == 0) {
+                        points.push([x1,y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dx;
+                    dd = i1 - (- (+ dy));
+                    i2 = dd - (- (+ dy));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (y <= y2) {
+                        points.push([x,y]);
+    
+                        if (dd <= 0) {
+                            x = x - 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        y = y + 1;
+                    }
+                }
+            } else {
+                if (-dx >= -dy) {
+                    if (dx == 0) {
+                        
+                        ([x1,y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dy;
+                    dd = i1 - (- (- dx));
+                    i2 = dd - (- (- dx));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (x >= x2) {
+                        points.push([x,y]);
+    
+                        if (dd <= 0) {
+                            y = y - 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        x = x - 1;
+                    }
+                } else {
+                    if (dy == 0) {
+                        points.push([x1,y1]);
+                        return;
+                    }
+    
+                    i1 = 2 * dx;
+                    dd = i1 - (- (- dy));
+                    i2 = dd - (- (- dy));
+    
+                    x = x1;
+                    y = y1;
+    
+                    while (y >= y2) {
+                        points.push([x,y]);
+    
+                        if (dd <= 0) {
+                            x = x - 1;
+                            dd += i2;
+                        } else dd += i1;
+                        
+                        y = y - 1;
+                    }
+                }
+            }
+        }
+    
+        return points;
+    },
+
+    line : function(x,y,dx,dy,r=255,g=0,b=255){
+        var points = Screen.getLine(x,y,dx,dy);
+        for(pi in points){
+            var point = points[pi];
+            var x = point[0];
+            var y = point[1];
+            Screen.putPixel(x,y,r,g,b);
+        }
+    },
 };
