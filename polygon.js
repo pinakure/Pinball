@@ -20,13 +20,13 @@ Polygon.prototype.draw = function(screen){
         var distance = Math.sqrt(((vertex.x-last_vertex.x)*(vertex.x-last_vertex.x))+((vertex.y-last_vertex.y)*(vertex.y-last_vertex.y)));
         // draw normal vectors
         if(Math.abs(distance)<1)continue;
-        var vector = {
-            x : (((this.x+vertex.x) - (this.x+last_vertex.x)) / distance) * 8,
-            y : (((this.y+vertex.y) - (this.y+last_vertex.y)) / distance) * 8,
-        };
         var normal = {
             x : (((this.x+vertex.x) - (this.x+last_vertex.x)) / distance) / 2,
             y : (((this.y+vertex.y) - (this.y+last_vertex.y)) / distance) / 2,
+        };
+        var vector = {
+            x : normal.x * 16,
+            y : normal.y * 16,
         };
         var offset = {
             x : this.x+((vertex.x+last_vertex.x)/2),
@@ -40,8 +40,9 @@ Polygon.prototype.draw = function(screen){
             offset.y,
         );
         
-        screen.putPixel(offset.x+-vector.y, offset.y+vector.x, 0,255,0);
-        screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,0,0);
+        // Draw tip of vector direction
+        //screen.putPixel(offset.x+-vector.y, offset.y+vector.x, 0,255,0);
+        screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,255,255);
         
         
         last_vertex = vertex;        
