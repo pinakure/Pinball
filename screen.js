@@ -374,13 +374,13 @@ var Screen = {
         return points;
     },
 
-    line : function(x,y,dx,dy,r=255,g=0,b=255){
+    line : function(x,y,dx,dy,r=255,g=0,b=255,offset_x=0, offset_y = 0){
         var points = Screen.getLine(x,y,dx,dy);
         for(pi in points){
             var point = points[pi];
             var x = point[0];
             var y = point[1];
-            Screen.putPixel(x,y,r,g,b);
+            Screen.putPixel(offset_x+x,offset_y+y,r,g,b);
         }
     },
 };
