@@ -47,7 +47,6 @@ var Game = {
         for(ball_index in Game.balls){
             var ball = Game.balls[ball_index];
             Screen.putPixel(ball.x  , ball.y  ,198,198,198);        
-            Screen.putPixel(ball.x+ball.delta.x  , ball.y+ball.delta.y  ,255,255,0,64);        
             
             Screen.putPixel(ball.x  , ball.y-1,255,255,255);
             Screen.putPixel(ball.x-1, ball.y  ,225,225,225);        
@@ -55,16 +54,8 @@ var Game = {
             Screen.putPixel(ball.x  , ball.y+1,124,124,124);        
             
         }
-        Screen.line( 10, 10,110, 10,198,198,198);//     ¨
-        Screen.line(110,110, 10, 10,128,128,128);//    \
-        Screen.line( 60, 10, 60,110,128,128,128);//     |
-        Screen.line( 10,110,110, 10,128,128,128);//      /
-        Screen.line( 10, 60,110, 60,128,128,128);//     -
-        Screen.line( 10,110, 10, 10,198,198,198);//    |
-        Screen.line(110,110,110, 10, 88, 88, 88);//      |
-        Screen.line(110,110, 10,110, 88, 88, 88);//     _
-        
-        
+        Screen.line( ball.x, ball.y,ball.x + ball.delta.x, ball.y+ball.delta.y, 0,255,0);
+            
         Screen.update();
         if(!Game.step_by_step) setTimeout(Game.update, 1000/120);
     },

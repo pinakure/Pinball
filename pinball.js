@@ -5,6 +5,8 @@ const KEY_DOWN  = 40;
 const KEY_ENTER = 13;
 const KEY_SPACE = 32;
 const KEY_SCAPE = 27;
+const KEY_SHIFT = 16;
+const KEY_M     = 77;
 
 const BALL_DIRECTION_NONE   = 0x0;
 const BALL_DIRECTION_DOWN   = 0x1;
@@ -12,10 +14,20 @@ const BALL_DIRECTION_UP     = 0x2;
 const BALL_DIRECTION_LEFT   = 0x4;
 const BALL_DIRECTION_RIGHT  = 0x8;
 
-function handleKeyboard( event ){
+var shift_on = false;
+
+function handleKeyUp( event ){
+    switch(event.keyCode){
+        case KEY_SHIFT:
+            shift_on = false;
+            break;
+    }
+}
+
+function handleKeyDown( event ){
     switch(event.keyCode){
         case KEY_ENTER:
-            Game.update();
+            if(Game.step_by_step) Game.update();
             break;
         case KEY_LEFT:
             break;
@@ -29,6 +41,12 @@ function handleKeyboard( event ){
             break;
         case KEY_SCAPE:
             break;
+        case KEY_SHIFT:
+            shift_on = true;
+            break;
+        case KEY_M:
+            
+            break;
         default: 
             console.log( event.keyCode );
             return;
@@ -37,7 +55,8 @@ function handleKeyboard( event ){
 }
 
 function boot( event ){
-    document.addEventListener("keydown", handleKeyboard);
+    document.addEventListener("keydown" , handleKeyDown);
+    document.addEventListener("keyup"   , handleKeyUp);
     Game.init();
 }
 
