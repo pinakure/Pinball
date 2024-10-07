@@ -8,7 +8,11 @@ function  getMousePos(canvas, evt) {
         y: parseInt((evt.clientY - rect.top ) * scaleY ), // been adjusted to be relative to element
     }
 }
-
+const BUTTON = {
+    MIDDLE : 4,
+    RIGHT : 2,
+    LEFT : 1,
+};
 var Screen = {
     width   : 240,
     height  : 320,
@@ -28,14 +32,37 @@ var Screen = {
         Screen.data     = Screen.context.getImageData( 0, 0, Screen.width, Screen.height );
         Screen.update();
         document.getElementById('canvas').addEventListener('mousedown', Screen.handleClick);
+        document.getElementById('canvas').addEventListener('mousemove', Screen.handleHover);
     },
 
+    handleHover : function(event){
+        if(Screen.vertices.length==0) return;
+        
+        const position = getMousePos(Screen.node, event);
+        var vertices=[];
+        for(v in Screen.vertices){
+            vertices.push(Screen.vertices[v]);            
+        }
+        vertices.push(
+            new Vertex(
+                position.x - Screen.polygon_position.x, 
+                position.y - Screen.polygon_position.y, 
+            )
+        );
+        Table.geometry[Screen.current_polygon] = new Polygon(
+            Screen.polygon_position.x, 
+            Screen.polygon_position.y,
+            [128,0,0],
+            vertices,
+            'new poly',
+        );
+        Table.draw();
+        Screen.update();
+        return false;
+    },
+    
     handleClick : function(event){
-        const BUTTON = {
-            MIDDLE : 4,
-            RIGHT : 2,
-            LEFT : 1,
-        };
+        
         
         const position = getMousePos(Screen.node, event);
         
