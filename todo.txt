@@ -3,3 +3,9 @@
 - Pintar de diferente color el vector normal de los segmentos que estén en colision
 - Modificar delta en función del normal con el que colisiona el objeto
 - Rotación de polígonos
+
+
+- Efecto typewriter en Display
+- Efectos clásicos en Display
+- Convertir display en canvas (fuentes incluidas)
+- Reproducir gif animados en display (con conversión de color)
