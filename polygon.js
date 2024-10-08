@@ -41,6 +41,30 @@ function Polygon(x, y, color=[255,0,0], vertices=[], name='Unnamed'){
     this.color = color;
     this.vertices = vertices;
     this.name = name;
+    this.bounding_box = {
+        sx : 0,
+        dx : 0,
+        sy : 0,
+        dy : 0,
+    };
+}
+
+Polygon.prototype.consolidate = function(){
+    var bounding_box = {
+        sx : 9999,
+        dx : -9999,
+        sy : 9999,
+        dy : -9999,
+    };
+    for(vertex_index in this.vertices){
+        var x = this.x + this.vertices[vertex_index].x;
+        var y = this.y + this.vertices[vertex_index].y;
+        if( x < bounding_box.sx ) bounding_box.sx = x;
+        if( x > bounding_box.dx ) bounding_box.dx = x;
+        if( y < bounding_box.sy ) bounding_box.sy = y;
+        if( y > bounding_box.dy ) bounding_box.dy = y;
+    }
+    this.bounding_box = bounding_box;
 }
 
 Polygon.prototype.resetFlags = function(){
@@ -62,6 +86,38 @@ Polygon.prototype.checkMouse = function( x, y ){
 }
 
 Polygon.prototype.draw = function(){
+    
+    // Draw bounding box
+    var bounding_box_color = [0,64,0]
+    Screen.line(
+        this.bounding_box.sx, this.bounding_box.sy, 
+        this.bounding_box.dx, this.bounding_box.sy,
+        bounding_box_color[0], 
+        bounding_box_color[1], 
+        bounding_box_color[2], 
+    );
+    Screen.line(
+        this.bounding_box.dx, this.bounding_box.sy, 
+        this.bounding_box.dx, this.bounding_box.dy,
+        bounding_box_color[0], 
+        bounding_box_color[1], 
+        bounding_box_color[2], 
+    );
+    Screen.line(
+        this.bounding_box.dx, this.bounding_box.dy, 
+        this.bounding_box.sx, this.bounding_box.dy,
+        bounding_box_color[0], 
+        bounding_box_color[1], 
+        bounding_box_color[2], 
+    );
+    Screen.line(
+        this.bounding_box.sx, this.bounding_box.dy, 
+        this.bounding_box.sx, this.bounding_box.sy,
+        bounding_box_color[0], 
+        bounding_box_color[1], 
+        bounding_box_color[2], 
+    );
+    // Draw polygon
     var last_vertex = this.vertices[this.vertices.length-1];
     var r = this.color[0],
         g = this.color[1],
@@ -108,7 +164,6 @@ Polygon.prototype.draw = function(){
         //screen.putPixel(offset.x+-vector.y, offset.y+vector.x, 0,255,0);
         Screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,255,255);
         
-        
         last_vertex = vertex;        
     }
     // Draw vertices
@@ -140,12 +195,6 @@ Polygon.prototype.move = function(x,y){
         y : y - this.y,
     };
     this.x += delta.x;
-    this.y += delta.y;
-    /*
-    for(vertex_index in this.vertices){
-        var vertex = this.vertices[vertex_index];
-        vertex.x += delta.x;
-        vertex.y += delta.y;        
-    }
-    */   
+    this.y += delta.y;    
+    this.consolidate();
 }

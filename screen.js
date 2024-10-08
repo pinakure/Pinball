@@ -1,26 +1,13 @@
-function  getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect(), // abs. size of element
-    scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for x
-    scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
-
-    return {
-        x: parseInt((evt.clientX - rect.left) * scaleX ), // scale mouse coordinates after they have
-        y: parseInt((evt.clientY - rect.top ) * scaleY ), // been adjusted to be relative to element
-    }
-}
-const BUTTON = {
-    MIDDLE : 4,
-    RIGHT : 2,
-    LEFT : 1,
-};
 var Screen = {
-    width   : 240,
-    height  : 320,
-    node    : null,        
-    context : null,
-    data    : null,
-    vertices : [],
-    mouse_position : {
+    width           : 240,
+    height          : 320,
+    node            : null,        
+    context         : null,
+    data            : null,
+    snap_to_grid    : true,
+    vertices        : [],
+    boss_screen     : true,
+    mouse_position  : {
         x : 0,
         y : 0,
     },
@@ -29,7 +16,7 @@ var Screen = {
         x : 0,
         y : 0,
     },
-    selection : {
+    selection       : {
         polygon : null,
         vertex  : null,
     },
@@ -78,14 +65,12 @@ var Screen = {
     
     handleDown : function(event){
         
-        
         var position = getMousePos(Screen.node, event);
         
         event.stopPropagation();  
         switch(event.buttons){
             case BUTTON.LEFT: 
-                
-                
+        
                 if( Screen.selection.vertex ){
                     if(Screen.vertices.length==0)break;
                     position.x =  Screen.selection.vertex.x+Screen.selection.polygon.x;
@@ -111,7 +96,7 @@ var Screen = {
                 );
                 break;
 
-            case BUTTON.RIGHT:
+            case BUTTON.MIDDLE:                 
                 if(Screen.vertices.length==0){
                     if( shift_on ) Screen.selection.polygon.move(position.x, position.y);
                     else Screen.selection.polygon.moveCenter(position.x, position.y);
@@ -125,14 +110,16 @@ var Screen = {
                 event.preventDefault();
                 break;
 
-            case BUTTON.MIDDLE:                 
-                Table.geometry[Screen.current_polygon] = new Polygon(
+            case BUTTON.RIGHT:
+                var polygon = new Polygon(
                     Screen.polygon_position.x, 
                     Screen.polygon_position.y,
                     [255,0,0],
                     Screen.vertices,
                     'new poly',
                 );
+                polygon.consolidate();
+                Table.geometry[Screen.current_polygon] = polygon;
                 Screen.current_polygon++;
                 Screen.vertices = new Array;
                 break;
@@ -173,13 +160,11 @@ var Screen = {
     update : function(){
         if(Screen.vertices.length>0){       
             var last = Screen.vertices[Screen.vertices.length-1];
-            Screen.line(
-                Screen.polygon_position.x + last.x,
-                Screen.polygon_position.y + last.y,
-                Screen.mouse_position.x , 
-                Screen.mouse_position.y , 
-                128,0,128,
-            );
+            sx = Screen.polygon_position.x + last.x;
+            sy = Screen.polygon_position.y + last.y;
+            dx = Screen.mouse_position.x;
+            dy = Screen.mouse_position.y;
+            Screen.line(sx,sy,dx,dy,128,0,128);
         }
         Screen.blit();
         Screen.clear();

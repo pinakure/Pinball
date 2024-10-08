@@ -11,7 +11,6 @@ var Display = {
 
     mode        : DISPLAY_MODE_ATTRACT,
     next_mode   : DISPLAY_MODE_ATTRACT,
-    text        : null,
 
     canvas  : {
 
