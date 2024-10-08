@@ -167,7 +167,7 @@ var Table = {
     },
 
     update : function(){
-        if(! Screen.grabbing_vertex ) Screen.selection.vertex = false;
+        Screen.selection.vertex = false;
         for(polygon_index in Table.geometry){
             var polygon = Table.geometry[polygon_index];
             polygon.resetFlags();

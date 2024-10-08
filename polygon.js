@@ -53,7 +53,7 @@ Polygon.prototype.resetFlags = function(){
 Polygon.prototype.checkMouse = function( x, y ){
     for(vertex_index in this.vertices){
         var vertex = this.vertices[vertex_index];
-        if( vertex.touches(x,y,10,this.x, this.y) ){
+        if( vertex.touches(x,y,4,this.x, this.y) ){
             vertex.active = true;
             return vertex;
         }
@@ -63,9 +63,23 @@ Polygon.prototype.checkMouse = function( x, y ){
 
 Polygon.prototype.draw = function(){
     var last_vertex = this.vertices[this.vertices.length-1];
+    var r = this.color[0],
+        g = this.color[1],
+        b = this.color[2];
+    if( Screen.selection.polygon == this ){
+        r = 128;
+        g = 128;
+        b = 128;
+    }
     for(vertex_index in this.vertices){
         var vertex = this.vertices[ vertex_index ];
-        Screen.line(this.x + last_vertex.x, this.y + last_vertex.y, this.x + vertex.x, this.y + vertex.y, this.color[0], this.color[1], this.color[2]);
+        Screen.line(
+            this.x + last_vertex.x, 
+            this.y + last_vertex.y, 
+            this.x + vertex.x, 
+            this.y + vertex.y, 
+            r,g,b,
+        );
         // get absolute distance
         var distance = Math.sqrt(((vertex.x-last_vertex.x)*(vertex.x-last_vertex.x))+((vertex.y-last_vertex.y)*(vertex.y-last_vertex.y)));
         // draw normal vectors

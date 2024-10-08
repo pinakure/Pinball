@@ -102,13 +102,9 @@ var Screen = {
                 
                 
                 if( Screen.selection.vertex ){
+                    if(Screen.vertices.length==0)break;
                     position.x =  Screen.selection.vertex.x+Screen.selection.polygon.x;
-                    position.y =  Screen.selection.vertex.y+Screen.selection.polygon.y;
-                    /*
-                    Screen.selection.vertex = null;
-                    Screen.selection.polygon = null;
-                    */
-                    debugger
+                    position.y =  Screen.selection.vertex.y+Screen.selection.polygon.y;                    
                 }
                 
                 if(Screen.vertices.length==0){
@@ -131,10 +127,11 @@ var Screen = {
                 break;
 
             case BUTTON.RIGHT:
-                /*if( Screen.selection.vertex || Screen.grabbing_vertex ){
-                    Screen.grabbing_vertex = Screen.selection.vertex;
+                if(Screen.vertices.length==0){
+                    if( shift_on ) Screen.selection.polygon.move(position.x, position.y);
+                    else Screen.selection.polygon.moveCenter(position.x, position.y);
                     break;
-                }*/
+                }
                 if( shift_on ) Table.geometry[Screen.current_polygon].move(position.x, position.y);
                 else Table.geometry[Screen.current_polygon].moveCenter(position.x, position.y);
                 Screen.polygon_position.x = position.x;
