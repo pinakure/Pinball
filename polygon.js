@@ -1,6 +1,33 @@
 function Vertex(x,y){
     this.x = x;
     this.y = y;
+    this.active = false;
+}
+
+Vertex.prototype.touches = function(x,y,radius=1,polygon_x=0, polygon_y=0){
+    var terms = [
+        x-(this.x+polygon_x), 
+        y-(this.y+polygon_y),
+    ];
+    var distance = Math.sqrt(
+        ( terms[0] * terms[0] ) 
+        + 
+        ( terms[1] * terms[1] )
+    );
+    //console.log(polygon_x+this.x, polygon_y+this.y, x,y, distance);
+    return distance <= radius;
+}
+
+Vertex.prototype.draw = function(offset_x, offset_y, r,g,b){
+    r=this.active?255:r;
+    g=this.active?255:g;
+    b=this.active?255:b;
+    Screen.putPixel(this.x+offset_x, this.y+offset_y, r, g, b);
+    if(!this.active)return;
+    Screen.putPixel(this.x+offset_x+1, this.y+offset_y, r, g, b);
+    Screen.putPixel(this.x+offset_x-1, this.y+offset_y, r, g, b);
+    Screen.putPixel(this.x+offset_x, this.y+offset_y+1, r, g, b);
+    Screen.putPixel(this.x+offset_x, this.y+offset_y-1, r, g, b);    
 }
 
 function Polygon(x, y, color=[255,0,0], vertices=[], name='Unnamed'){
@@ -11,11 +38,29 @@ function Polygon(x, y, color=[255,0,0], vertices=[], name='Unnamed'){
     this.name = name;
 }
 
-Polygon.prototype.draw = function(screen){
+Polygon.prototype.resetFlags = function(){
+    for(vertex_index in this.vertices){
+        var vertex = this.vertices[vertex_index];
+        vertex.active = false;
+    }
+}
+
+Polygon.prototype.checkMouse = function( x, y ){
+    for(vertex_index in this.vertices){
+        var vertex = this.vertices[vertex_index];
+        if( vertex.touches(x,y,10,this.x, this.y) ){
+            vertex.active = true;            
+            return vertex;
+        }
+    }
+    return null;
+}
+
+Polygon.prototype.draw = function(){
     var last_vertex = this.vertices[this.vertices.length-1];
     for(vertex_index in this.vertices){
         var vertex = this.vertices[ vertex_index ];
-        screen.line(this.x + last_vertex.x, this.y + last_vertex.y, this.x + vertex.x, this.y + vertex.y, this.color[0], this.color[1], this.color[2]);
+        Screen.line(this.x + last_vertex.x, this.y + last_vertex.y, this.x + vertex.x, this.y + vertex.y, this.color[0], this.color[1], this.color[2]);
         // get absolute distance
         var distance = Math.sqrt(((vertex.x-last_vertex.x)*(vertex.x-last_vertex.x))+((vertex.y-last_vertex.y)*(vertex.y-last_vertex.y)));
         // draw normal vectors
@@ -32,7 +77,7 @@ Polygon.prototype.draw = function(screen){
             x : this.x+((vertex.x+last_vertex.x)/2),
             y : this.y+((vertex.y+last_vertex.y)/2),
         };
-        screen.line(
+        Screen.line(
             -normal.y, normal.x,
             vector.y ,-vector.x, 
             168,128,128,
@@ -42,7 +87,7 @@ Polygon.prototype.draw = function(screen){
         
         // Draw tip of vector direction
         //screen.putPixel(offset.x+-vector.y, offset.y+vector.x, 0,255,0);
-        screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,255,255);
+        Screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,255,255);
         
         
         last_vertex = vertex;        
@@ -50,10 +95,10 @@ Polygon.prototype.draw = function(screen){
     // Draw vertices
     for(vertex_index in this.vertices){
         var vertex = this.vertices[ vertex_index ];
-        screen.putPixel(this.x+vertex.x, this.y+vertex.y, 128,255,0);
+        vertex.draw(this.x, this.y, 128,255,0);
     }
     // Draw center
-    screen.putPixel(this.x, this.y, 255,200,0);
+    Screen.putPixel(this.x, this.y, 255,200,0);
 }
 
 Polygon.prototype.moveCenter = function(x,y){

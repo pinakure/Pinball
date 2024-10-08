@@ -4,7 +4,7 @@ var Game = {
     ball_count  : 0,
     score       : 0,
     game_over   : true,
-    step_by_step: true,
+    step_by_step: false,
     
     
     balls        : null,
@@ -16,6 +16,13 @@ var Game = {
         Table.init();
         Game.new();
         Game.update();
+        try{
+            this.step_by_step = window.location.href.split('?')[1] == 'step_by_step';
+            if(this.step_by_step)console.log("STEP BY STEP MODE IS ENABLED.\n Press ENTER to continue");
+
+        } catch(e){
+            this.step_by_step = false;
+        }
     },
     
     new : function(){

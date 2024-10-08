@@ -16,6 +16,8 @@ function polarize(x){
 
 Ball.prototype.update = function(){
     /* Solve deltas */
+    return 0;
+
     const BOUNCE_FACTOR_UP      = 1.0;
     const BOUNCE_FACTOR_DOWN    = 0.55;
     const BOUNCE_FACTOR_LEFT    = 0.95;

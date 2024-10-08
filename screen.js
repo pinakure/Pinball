@@ -20,10 +20,24 @@ var Screen = {
     context : null,
     data    : null,
     vertices : [],
+    mouse_position : {
+        x : 0,
+        y : 0,
+    },
     current_polygon : 0,
     polygon_position : {
         x : 0,
         y : 0,
+    },
+    selection : {
+        polygon : null,
+        vertex  : null,
+    },
+    grabbing_vertex : null,
+
+    resetSelection : function(){
+        this.selection.polygon = null;
+        this.selection.vertex = null;
     },
 
     init : function(){
@@ -31,46 +45,68 @@ var Screen = {
         Screen.context  = Screen.node.getContext( '2d' );
         Screen.data     = Screen.context.getImageData( 0, 0, Screen.width, Screen.height );
         Screen.update();
-        document.getElementById('canvas').addEventListener('mousedown', Screen.handleClick);
+        document.getElementById('canvas').addEventListener('mouseup'  , Screen.handleUp);
+        document.getElementById('canvas').addEventListener('mousedown', Screen.handleDown);
         document.getElementById('canvas').addEventListener('mousemove', Screen.handleHover);
     },
 
     handleHover : function(event){
+        const position = getMousePos(Screen.node, event);
+        Screen.mouse_position = position;
         if(Screen.vertices.length==0) return;
         
-        const position = getMousePos(Screen.node, event);
         var vertices=[];
         for(v in Screen.vertices){
             vertices.push(Screen.vertices[v]);            
         }
-        vertices.push(
-            new Vertex(
-                position.x - Screen.polygon_position.x, 
-                position.y - Screen.polygon_position.y, 
-            )
+        var last = Screen.vertices[Screen.vertices.length-1];
+        Screen.line(
+            Screen.polygon_position.x + last.x,
+            Screen.polygon_position.y + last.y,
+            position.x , 
+            position.y , 
+            128,0,128,
         );
-        Table.geometry[Screen.current_polygon] = new Polygon(
-            Screen.polygon_position.x, 
-            Screen.polygon_position.y,
-            [128,0,0],
-            vertices,
-            'new poly',
-        );
+        
         Table.draw();
         Screen.update();
         return false;
     },
+
+    handleUp : function(event){
+        
+        const position = getMousePos(Screen.node, event);
+        
+        event.stopPropagation();  
+        switch(event.buttons){
+            case BUTTON.LEFT: 
+                break;
+
+            case BUTTON.RIGHT:
+                if(Screen.grabbing_vertex){
+
+                }
+                Screen.grabbing_vertex = false;
+                break;
+        }
+    },
     
-    handleClick : function(event){
+    handleDown : function(event){
         
         
         const position = getMousePos(Screen.node, event);
         
         event.stopPropagation();  
-        console.clear();
-        console.log(position);
         switch(event.buttons){
             case BUTTON.LEFT: 
+                
+                if( Screen.selection.vertex && Screen.selection.vertex ){
+                    position.x =  Screen.selection.vertex.x+Screen.selection.polygon.x;
+                    position.y =  Screen.selection.vertex.y+Screen.selection.polygon.y;
+                    Screen.selection.vertex = null;
+                    Screen.selection.polygon = null;
+                }
+                
                 if(Screen.vertices.length==0){
                     Screen.polygon_position.x = position.x;
                     Screen.polygon_position.y = position.y;
@@ -90,7 +126,11 @@ var Screen = {
                 );
                 break;
 
-            case BUTTON.RIGHT: 
+            case BUTTON.RIGHT:
+                if( Screen.selection.vertex || Screen.grabbing_vertex ){
+                    Screen.grabbing_vertex = Screen.selection.vertex;
+                    break;
+                }
                 if( shift_on ) Table.geometry[Screen.current_polygon].move(position.x, position.y);
                 else Table.geometry[Screen.current_polygon].moveCenter(position.x, position.y);
                 Screen.polygon_position.x = position.x;
