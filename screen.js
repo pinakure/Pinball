@@ -53,21 +53,6 @@ var Screen = {
     handleHover : function(event){
         const position = getMousePos(Screen.node, event);
         Screen.mouse_position = position;
-        if(Screen.vertices.length==0) return;
-        
-        var vertices=[];
-        for(v in Screen.vertices){
-            vertices.push(Screen.vertices[v]);            
-        }
-        var last = Screen.vertices[Screen.vertices.length-1];
-        Screen.line(
-            Screen.polygon_position.x + last.x,
-            Screen.polygon_position.y + last.y,
-            position.x , 
-            position.y , 
-            128,0,128,
-        );
-        
         Table.draw();
         Screen.update();
         return false;
@@ -186,6 +171,16 @@ var Screen = {
     },
 
     update : function(){
+        if(Screen.vertices.length>0){       
+            var last = Screen.vertices[Screen.vertices.length-1];
+            Screen.line(
+                Screen.polygon_position.x + last.x,
+                Screen.polygon_position.y + last.y,
+                Screen.mouse_position.x , 
+                Screen.mouse_position.y , 
+                128,0,128,
+            );
+        }
         Screen.blit();
         Screen.clear();
     },
