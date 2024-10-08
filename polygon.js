@@ -23,11 +23,16 @@ Vertex.prototype.draw = function(offset_x, offset_y, r,g,b){
     g=this.active?255:g;
     b=this.active?255:b;
     Screen.putPixel(this.x+offset_x, this.y+offset_y, r, g, b);
-    if(!this.active)return;
-    Screen.putPixel(this.x+offset_x+1, this.y+offset_y, r, g, b);
-    Screen.putPixel(this.x+offset_x-1, this.y+offset_y, r, g, b);
-    Screen.putPixel(this.x+offset_x, this.y+offset_y+1, r, g, b);
-    Screen.putPixel(this.x+offset_x, this.y+offset_y-1, r, g, b);    
+    if(this.active || Screen.selection.vertex == this){
+        Screen.putPixel(this.x+offset_x-1, this.y+offset_y-1, r, g, b);
+        Screen.putPixel(this.x+offset_x+1, this.y+offset_y-1, r, g, b);
+        Screen.putPixel(this.x+offset_x-1, this.y+offset_y+1, r, g, b);
+        Screen.putPixel(this.x+offset_x+1, this.y+offset_y+1, r, g, b);
+        Screen.putPixel(this.x+offset_x+1, this.y+offset_y, r, g, b);
+        Screen.putPixel(this.x+offset_x-1, this.y+offset_y, r, g, b);
+        Screen.putPixel(this.x+offset_x, this.y+offset_y+1, r, g, b);
+        Screen.putPixel(this.x+offset_x, this.y+offset_y-1, r, g, b);    
+    }
 }
 
 function Polygon(x, y, color=[255,0,0], vertices=[], name='Unnamed'){
@@ -49,7 +54,7 @@ Polygon.prototype.checkMouse = function( x, y ){
     for(vertex_index in this.vertices){
         var vertex = this.vertices[vertex_index];
         if( vertex.touches(x,y,10,this.x, this.y) ){
-            vertex.active = true;            
+            vertex.active = true;
             return vertex;
         }
     }
@@ -95,7 +100,7 @@ Polygon.prototype.draw = function(){
     // Draw vertices
     for(vertex_index in this.vertices){
         var vertex = this.vertices[ vertex_index ];
-        vertex.draw(this.x, this.y, 128,255,0);
+        vertex.draw(this.x, this.y, 255,255,255);
     }
     // Draw center
     Screen.putPixel(this.x, this.y, 255,200,0);

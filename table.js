@@ -169,11 +169,10 @@ var Table = {
     update : function(){
         if(! Screen.grabbing_vertex ) Screen.selection.vertex = false;
         for(polygon_index in Table.geometry){
-            console.log("Updating poly");
             var polygon = Table.geometry[polygon_index];
             polygon.resetFlags();
             if((vertex = polygon.checkMouse( Screen.mouse_position.x, Screen.mouse_position.y )) != null){
-                Screen.selection.polygon = this;
+                Screen.selection.polygon = polygon;
                 Screen.selection.vertex = vertex;
             };
         }

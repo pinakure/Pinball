@@ -94,17 +94,21 @@ var Screen = {
     handleDown : function(event){
         
         
-        const position = getMousePos(Screen.node, event);
+        var position = getMousePos(Screen.node, event);
         
         event.stopPropagation();  
         switch(event.buttons){
             case BUTTON.LEFT: 
                 
-                if( Screen.selection.vertex && Screen.selection.vertex ){
+                
+                if( Screen.selection.vertex ){
                     position.x =  Screen.selection.vertex.x+Screen.selection.polygon.x;
                     position.y =  Screen.selection.vertex.y+Screen.selection.polygon.y;
+                    /*
                     Screen.selection.vertex = null;
                     Screen.selection.polygon = null;
+                    */
+                    debugger
                 }
                 
                 if(Screen.vertices.length==0){
@@ -127,10 +131,10 @@ var Screen = {
                 break;
 
             case BUTTON.RIGHT:
-                if( Screen.selection.vertex || Screen.grabbing_vertex ){
+                /*if( Screen.selection.vertex || Screen.grabbing_vertex ){
                     Screen.grabbing_vertex = Screen.selection.vertex;
                     break;
-                }
+                }*/
                 if( shift_on ) Table.geometry[Screen.current_polygon].move(position.x, position.y);
                 else Table.geometry[Screen.current_polygon].moveCenter(position.x, position.y);
                 Screen.polygon_position.x = position.x;
