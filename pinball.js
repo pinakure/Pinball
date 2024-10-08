@@ -7,6 +7,7 @@ const KEY_SPACE = 32;
 const KEY_SCAPE = 27;
 const KEY_SHIFT = 16;
 const KEY_M     = 77;
+const KEY_B     = 66;
 
 const BALL_DIRECTION_NONE   = 0x0;
 const BALL_DIRECTION_DOWN   = 0x1;
@@ -43,6 +44,9 @@ function handleKeyDown( event ){
             break;
         case KEY_SHIFT:
             shift_on = true;
+            break;
+        case KEY_B:
+            document.getElementsByClassName('boss')[0].remove();
             break;
         case KEY_M:
             
