@@ -1,0 +1,5 @@
+- Generar encuadre de polígonos al momento de crearlos y dibujar el rectangulo de 	encuadre, esta será la primera linea de detección de colisiones, que seleccionará cuáles polígonos serán testados contra el objeto que interactuará con ellos.
+- Pintar de diferente color los poligonos que estén colisionando con un objeto
+- Pintar de diferente color el vector normal de los segmentos que estén en colision
+- Modificar delta en función del normal con el que colisiona el objeto
+- Rotación de polígonos
