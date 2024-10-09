@@ -6,14 +6,16 @@ var Game = {
     game_over   : true,
     step_by_step: false,
     
+    boss_screen : true,
     
-    balls        : null,
+    balls       : null,
     
     
     init : function(){
         Screen.init();
         Display.init();
         Table.init();
+        Editor.init();
         Game.new();
         Game.update();
         try{

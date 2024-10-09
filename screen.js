@@ -4,129 +4,12 @@ var Screen = {
     node            : null,        
     context         : null,
     data            : null,
-    snap_to_grid    : true,
-    vertices        : [],
-    boss_screen     : true,
-    mouse_position  : {
-        x : 0,
-        y : 0,
-    },
-    current_polygon : 0,
-    polygon_position : {
-        x : 0,
-        y : 0,
-    },
-    selection       : {
-        polygon : null,
-        vertex  : null,
-    },
-    grabbing_vertex : null,
-
-    resetSelection : function(){
-        this.selection.polygon = null;
-        this.selection.vertex = null;
-    },
-
+    
     init : function(){
         Screen.node     = document.getElementById( 'canvas' );
         Screen.context  = Screen.node.getContext( '2d' );
         Screen.data     = Screen.context.getImageData( 0, 0, Screen.width, Screen.height );
         Screen.update();
-        document.getElementById('canvas').addEventListener('mouseup'  , Screen.handleUp);
-        document.getElementById('canvas').addEventListener('mousedown', Screen.handleDown);
-        document.getElementById('canvas').addEventListener('mousemove', Screen.handleHover);
-    },
-
-    handleHover : function(event){
-        const position = getMousePos(Screen.node, event);
-        Screen.mouse_position = position;
-        Table.draw();
-        Screen.update();
-        return false;
-    },
-
-    handleUp : function(event){
-        
-        const position = getMousePos(Screen.node, event);
-        
-        event.stopPropagation();  
-        switch(event.buttons){
-            case BUTTON.LEFT: 
-                break;
-
-            case BUTTON.RIGHT:
-                if(Screen.grabbing_vertex){
-
-                }
-                Screen.grabbing_vertex = false;
-                break;
-        }
-    },
-    
-    handleDown : function(event){
-        
-        var position = getMousePos(Screen.node, event);
-        
-        event.stopPropagation();  
-        switch(event.buttons){
-            case BUTTON.LEFT: 
-        
-                if( Screen.selection.vertex ){
-                    if(Screen.vertices.length==0)break;
-                    position.x =  Screen.selection.vertex.x+Screen.selection.polygon.x;
-                    position.y =  Screen.selection.vertex.y+Screen.selection.polygon.y;                    
-                }
-                
-                if(Screen.vertices.length==0){
-                    Screen.polygon_position.x = position.x;
-                    Screen.polygon_position.y = position.y;
-                }
-                Screen.vertices.push( 
-                    new Vertex(
-                        position.x-Screen.polygon_position.x, 
-                        position.y-Screen.polygon_position.y,
-                    ) 
-                );
-                Table.geometry[Screen.current_polygon] = new Polygon(
-                    Screen.polygon_position.x, 
-                    Screen.polygon_position.y,
-                    [255,0,0],
-                    Screen.vertices,
-                    'new poly',
-                );
-                break;
-
-            case BUTTON.MIDDLE:                 
-                if(Screen.vertices.length==0){
-                    if( shift_on ) Screen.selection.polygon.move(position.x, position.y);
-                    else Screen.selection.polygon.moveCenter(position.x, position.y);
-                    break;
-                }
-                if( shift_on ) Table.geometry[Screen.current_polygon].move(position.x, position.y);
-                else Table.geometry[Screen.current_polygon].moveCenter(position.x, position.y);
-                Screen.polygon_position.x = position.x;
-                Screen.polygon_position.y = position.y;
-                event.stopPropagation();
-                event.preventDefault();
-                break;
-
-            case BUTTON.RIGHT:
-                var polygon = new Polygon(
-                    Screen.polygon_position.x, 
-                    Screen.polygon_position.y,
-                    [255,0,0],
-                    Screen.vertices,
-                    'new poly',
-                );
-                polygon.consolidate();
-                Table.geometry[Screen.current_polygon] = polygon;
-                Screen.current_polygon++;
-                Screen.vertices = new Array;
-                break;
-        };          
-        Table.draw();
-        Screen.update();
-        return false;
     },
 
     putPixel : function(x,y,r,g,b){
@@ -158,14 +41,6 @@ var Screen = {
     },
 
     update : function(){
-        if(Screen.vertices.length>0){       
-            var last = Screen.vertices[Screen.vertices.length-1];
-            sx = Screen.polygon_position.x + last.x;
-            sy = Screen.polygon_position.y + last.y;
-            dx = Screen.mouse_position.x;
-            dy = Screen.mouse_position.y;
-            Screen.line(sx,sy,dx,dy,128,0,128);
-        }
         Screen.blit();
         Screen.clear();
     },

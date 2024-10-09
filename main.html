@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Petición (#10329) - Noname</title>
+        <link rel="stylesheet" type="text/css" href="fontawesome/css/fontawesome.css"/>
         <link rel="stylesheet" type="text/css" href="style.css"/>
         <link rel="stylesheet" type="text/css" href="fonts.css"/>
         <script src="polygon.js"></script>
@@ -11,12 +12,36 @@
         <script src="table.js"></script>
         <script src="ball.js"></script>
         <script src="game.js"></script>
+        <script src="editor.js"></script>
         <script src="pinball.js"></script>
     </head>
     <body oncontextmenu="return false;">
         <input class="blink fast" type="text" id="display_text" name="display_text" value="0123456789ABCDEF01234567" readonly="readonly"/>
         <canvas id="display_canvas" width="512" height="25"></canvas>
         <canvas id="canvas" width="240" height="320"></canvas>
+        <div id="infobar">
+            <div id="info-select">
+                <h2 style="font-weight: 400;">Select Tool</h2>
+                <hr style="border-color: #0f0;"/>
+                <table>
+                    <tr><td>LB</td><td>Create Vertex</td></tr>
+                    <tr><td>RB</td><td>Finish Polygon</td></tr>
+                    <tr><td>MB</td><td>Move Center</td></tr>
+                    <tr><td>Shift + MB</td><td>Move Polygon</td></tr>
+                </table>
+            </div>
+        </div>
+        <div id="toolbar">
+            <button onclick="selectTool('select')" class="toolbar-button tool"   id="select"    title="Select (A)"><i class="fa fa-mouse-pointer"></i></button>
+            <button onclick="selectTool('rotate')" class="toolbar-button tool"   id="rotate"    title="Rotate (R)"><i class="fa fa-undo"></i></button>
+            <button onclick="selectTool('move'  )" class="toolbar-button tool"   id="move"      title="Move   (M)"><i class="fa fa-arrows-alt"></i></button>
+            <button onclick="selectTool('delete')" class="toolbar-button tool"   id="delete"    title="Delete (D)"><i class="fa fa-trash"></i></button>
+            <button onclick="selectTool('scale' )" class="toolbar-button tool"   id="scale"     title="Scale  (S)"><i class="fa fa-expand"></i></button>
+            <button onclick="selectTool('fit'   )" class="toolbar-button tool"   id="fit"       title="Fit to Grid  (F)"><i class="fa fa-vector-square"></i></button>
+            <hr style="border-color: #a0a0a0;"/>
+            <button onclick="toggle('grid'      )" class="toolbar-button toggle" id="grid"      title="Grid   (G)"><i class="fa fa-th"></i></button>
+            <button onclick="toggle('backdrop'  )" class="toolbar-button toggle" id="backdrop"  title="Show Backdrop Image  (I)"><i class="fa fa-image"></i></button>
+        </div>
         <img src="boss-screen.png" class="boss"/>
     </body>
 </html>

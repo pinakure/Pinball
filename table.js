@@ -167,13 +167,13 @@ var Table = {
     },
 
     update : function(){
-        Screen.selection.vertex = false;
+        Editor.selection.vertex = false;
         for(polygon_index in Table.geometry){
             var polygon = Table.geometry[polygon_index];
             polygon.resetFlags();
-            if((vertex = polygon.checkMouse( Screen.mouse_position.x, Screen.mouse_position.y )) != null){
-                Screen.selection.polygon = polygon;
-                Screen.selection.vertex = vertex;
+            if((vertex = polygon.checkMouse( Editor.mouse_position.x, Editor.mouse_position.y )) != null){
+                Editor.selection.polygon = polygon;
+                Editor.selection.vertex = vertex;
             };
         }
         this.draw();

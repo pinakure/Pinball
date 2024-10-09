@@ -23,7 +23,7 @@ Vertex.prototype.draw = function(offset_x, offset_y, r,g,b){
     g=this.active?255:g;
     b=this.active?255:b;
     Screen.putPixel(this.x+offset_x, this.y+offset_y, r, g, b);
-    if(this.active || Screen.selection.vertex == this){
+    if(this.active || Editor.selection.vertex == this){
         Screen.putPixel(this.x+offset_x-1, this.y+offset_y-1, r, g, b);
         Screen.putPixel(this.x+offset_x+1, this.y+offset_y-1, r, g, b);
         Screen.putPixel(this.x+offset_x-1, this.y+offset_y+1, r, g, b);
@@ -65,6 +65,7 @@ Polygon.prototype.consolidate = function(){
         if( y > bounding_box.dy ) bounding_box.dy = y;
     }
     this.bounding_box = bounding_box;
+    Editor.selection.polygon = this;
 }
 
 Polygon.prototype.resetFlags = function(){
@@ -122,7 +123,7 @@ Polygon.prototype.draw = function(){
     var r = this.color[0],
         g = this.color[1],
         b = this.color[2];
-    if( Screen.selection.polygon == this ){
+    if( Editor.selection.polygon == this ){
         r = 128;
         g = 128;
         b = 128;

@@ -39,7 +39,8 @@ var shift_on = false;
 var ctrl_on  = false;
 var alt_on   = false;
 
-function  getMousePos(canvas, evt) {
+function  getMousePos(evt) {
+    var canvas = Screen.node;
     var rect = canvas.getBoundingClientRect(), // abs. size of element
     scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for x
     scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
@@ -96,17 +97,17 @@ function handleKeyDown( event ){
             break;
         case KEY_B:
             var node = document.getElementsByClassName('boss')[0];
-            Screen.boss_screen ^= 1;
-            if(Screen.boss_screen){
+            Game.boss_screen ^= 1;
+            if(Game.boss_screen){
                 node.setAttribute('style', '');
             } else {
                 node.setAttribute('style', 'display: none');
-                Display.text.blink(`Boss Screen ${Screen.boss_screen ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
+                Display.text.blink(`Boss Screen ${Game.boss_screen ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
             }
             break;
         case KEY_G:
-            Screen.snap_to_grid ^= 1;
-            Display.text.blink(`Snap to grid ${Screen.snap_to_grid ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
+            Editor.snap_to_grid ^= 1;
+            Display.text.blink(`Snap to grid ${Editor.snap_to_grid ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
             break;
         case KEY_M:
             

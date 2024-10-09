@@ -77,3 +77,57 @@ canvas {
     left:0px;
     z-index: 1000;
 }
+#infobar > table > tbody > tr > td:nth-child(2){
+    text-align: right;
+}
+#infobar > table {
+    width: 100%; 
+    padding-right: 8px;
+}
+#infobar {
+    font-family: ProggySmallTT;
+    position: absolute;
+    top: 70px;
+    right: 0px;
+    width: 240px;
+    height: calc(100% - 70px);
+    background-color: #020;;
+    color: #0f0;
+    text-align: right;
+    text-shadow: 1px 1px 0px #080;
+}
+
+#toolbar {
+    width: 52px;
+ /*   height: 128px;*/
+    position: absolute;
+    top: 72px;
+    left: 0px;
+    background-color   : #a0a0a0;
+    box-shadow: 4px 4px 0px #224a;
+    padding: 2px 2px 2px 2px;
+    text-align: left;
+}
+
+.toolbar-button.selected {
+    border-style: inset;
+    background-color: #888;
+}
+
+.toolbar-button {
+    display: inline-block;
+    text-align: center;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    width   : 24px;
+    height  : 24px;
+    border-width: 1px;
+    outline-width: 1px;
+    outline-color: #aaa;
+    border-color: #aaa;
+    border-radius: 3px;
+
+    outline-style: inset;
+    background-color   : #a0a0a0;
+}
