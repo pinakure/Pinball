@@ -12,3 +12,8 @@ x Generar encuadre de polígonos al momento de crearlos y dibujar el rectangulo 
 - Efectos clásicos en Display
 - Convertir display en canvas (fuentes incluidas)
 - Reproducir gif animados en display (con conversión de color)
+
+---------------
+BUGS
+---------------
+- After consolidation, the polygon will move opposite to the mouse coordinates until a polygon is selectred. This is not an intended behavior
