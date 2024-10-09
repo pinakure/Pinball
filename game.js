@@ -45,7 +45,7 @@ var Game = {
     update : function(){
         // Update table
         Table.update();
-        
+    
         // Update
         for(ball_index in Game.balls){
             var ball = Game.balls[ball_index];
@@ -65,7 +65,11 @@ var Game = {
         }
         Screen.line( ball.x, ball.y,ball.x + ball.delta.x, ball.y+ball.delta.y, 0,255,0);
             
-        Screen.update();
+    
+        // Update Editor
+        if( !Editor.update()){
+            //Screen.update();
+        }
         if(!Game.step_by_step) setTimeout(Game.update, 1000/120);
     },
 };
