@@ -93,13 +93,16 @@ var Editor = {
                         ) 
                     );
 
-                    Editor.polygon = new Polygon(
-                        Editor.polygon_position.x, 
-                        Editor.polygon_position.y,
-                        [255,255,0],
-                        Editor.vertices,
-                        'temporary',
-                    );
+                    // Please write this properly, store a temp object and add it to 
+                    // table geometry only when polygon is finished.
+                }
+                Editor.polygon = new Polygon(
+                    Editor.polygon_position.x, 
+                    Editor.polygon_position.y,
+                    [255,255,0],
+                    Editor.vertices,
+                    'temporary',
+                );
                     
                     Table.geometry[ Editor.current_polygon ] = new Polygon(
                         Editor.polygon_position.x, 
@@ -108,7 +111,6 @@ var Editor = {
                         Editor.vertices,
                         'new poly',
                     );
-                }
                 break;
 
             case BUTTON.MIDDLE:                 
@@ -139,8 +141,9 @@ var Editor = {
                 Editor.vertices = new Array;
                 break;
         };          
-        Table.draw();
-        Editor.update();
+        //Table.draw();
+        //Editor.draw();
+        //Screen.update();        
         return false;
     },
 
@@ -159,7 +162,7 @@ var Editor = {
         // Return false to force Screen.update when returning back to Game.update()
         
         Editor.draw();
-        Screen.update();   
+        // Screen.update();   
         return true;
     },
 

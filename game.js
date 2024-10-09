@@ -67,9 +67,15 @@ var Game = {
             
     
         // Update Editor
-        if( !Editor.update()){
-            //Screen.update();
+        if( Editor.initialized && Editor.vertices.length > 0 ){       
+            var last = Editor.vertices[ Editor.vertices.length-1 ];
+            sx = Editor.polygon_position.x + last.x;
+            sy = Editor.polygon_position.y + last.y;
+            dx = Editor.mouse_position.x;
+            dy = Editor.mouse_position.y;
+            Screen.line(sx,sy,dx,dy,128,0,128);
         }
+        Screen.update();
         if(!Game.step_by_step) setTimeout(Game.update, 1000/120);
     },
 };
