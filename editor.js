@@ -160,9 +160,7 @@ var Editor = {
 
     update : function(){
         // Return false to force Screen.update when returning back to Game.update()
-        
         Editor.draw();
-        // Screen.update();   
         return true;
     },
 
