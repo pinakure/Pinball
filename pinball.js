@@ -1,40 +1,3 @@
-const BUTTON = {
-    MIDDLE : 4,
-    RIGHT : 2,
-    LEFT : 1,
-};
-
-const KEY_LEFT  = 37;
-const KEY_RIGHT = 39;
-const KEY_UP    = 38;
-const KEY_DOWN  = 40;
-const KEY_ENTER = 13;
-const KEY_SPACE = 32;
-const KEY_SCAPE = 27;
-const KEY_SHIFT = 16;
-const KEY_CTRL  = 16;
-const KEY_ALT   = 16;
-
-const KEY_A     = 65;
-const KEY_B     = 66;
-const KEY_C     = 67;
-const KEY_D     = 68;
-const KEY_E     = 69;
-const KEY_F     = 70;
-const KEY_G     = 71;
-const KEY_H     = 72;
-const KEY_I     = 73;
-const KEY_J     = 74;
-const KEY_K     = 75;
-const KEY_L     = 76;
-const KEY_M     = 77;
-
-const BALL_DIRECTION_NONE   = 0x0;
-const BALL_DIRECTION_DOWN   = 0x1;
-const BALL_DIRECTION_UP     = 0x2;
-const BALL_DIRECTION_LEFT   = 0x4;
-const BALL_DIRECTION_RIGHT  = 0x8;
-
 var shift_on = false;
 var ctrl_on  = false;
 var alt_on   = false;
@@ -44,7 +7,7 @@ function  getMousePos(evt) {
     var rect = canvas.getBoundingClientRect(), // abs. size of element
     scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for x
     scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
-    if( Screen.snap_to_grid ){
+    if( Editor.snap_to_grid ){
         return {
             x: parseInt(parseInt((evt.clientX - rect.left) * scaleX )/4)*4, 
             y: parseInt(parseInt((evt.clientY - rect.top ) * scaleY )/4)*4, 
@@ -105,18 +68,27 @@ function handleKeyDown( event ){
                 Display.text.blink(`Boss Screen ${Game.boss_screen ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
             }
             break;
-        case KEY_G:
-            Editor.snap_to_grid ^= 1;
-            Display.text.blink(`Snap to grid ${Editor.snap_to_grid ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
-            break;
-        case KEY_M:
-            
-            break;
         default: 
+            if(Editor.initialized){
+                for(key in Infobar.tools){
+                    var info = Infobar.tools[key];
+                    if(event.keyCode == info.keycode) {
+                        Infobar.selectTool(`${key}`);
+                        return;            
+                    }
+                }
+                for(key in Infobar.toggles){
+                    var info = Infobar.toggles[key];
+                    if(event.keyCode == info.keycode) {
+                        toggle(`${key}`);
+                        return;            
+                    }
+                }
+            }
             console.log( event.keyCode );
             return;
     }
-    event.preventDefault();    
+    event.preventDefault();
 }
 
 function boot( event ){

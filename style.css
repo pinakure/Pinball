@@ -1,3 +1,6 @@
+* {
+    user-select: none;
+}
 html {
     height          : 100%;
 }
@@ -84,6 +87,9 @@ canvas {
     width: 100%; 
     padding-right: 8px;
 }
+table {
+    width: 100%;
+}
 #infobar {
     font-family: ProggySmallTT;
     position: absolute;
@@ -98,7 +104,7 @@ canvas {
 }
 
 #toolbar {
-    width: 52px;
+    width: 48px;
  /*   height: 128px;*/
     position: absolute;
     top: 72px;

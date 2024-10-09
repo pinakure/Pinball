@@ -1,8 +1,14 @@
+
+
 var Editor = {
+
+    initialized         : false,
+
+    current_tool        : TOOL.POLYGON,
 
     polygon             : null,
     current_polygon     : 0,//rename to polygon_index
-    snap_to_grid        : true,
+    snap_to_grid        : false,
     vertices            : [],
     grabbing_vertex     : null,
 
@@ -23,7 +29,10 @@ var Editor = {
         document.getElementById('canvas').addEventListener('mouseup'  , Editor.handleUp);
         document.getElementById('canvas').addEventListener('mousedown', Editor.handleDown);
         document.getElementById('canvas').addEventListener('mousemove', Editor.handleHover);
-        selectTool('select');
+        Table.render_backdrop = false;
+        Infobar.init();
+        Infobar.selectTool('polygon');
+        this.initialized = true;
     },
 
     resetSelection : function(){
@@ -65,40 +74,41 @@ var Editor = {
         event.stopPropagation();  
         switch(event.buttons){
             case BUTTON.LEFT: 
-        
-                if( Editor.selection.vertex ){
-                    if(Editor.vertices.length==0)break;
-                    position.x =  Editor.selection.vertex.x + Editor.selection.polygon.x;
-                    position.y =  Editor.selection.vertex.y + Editor.selection.polygon.y;                    
-                }
-                
-                if(Editor.vertices.length==0){
-                    Editor.polygon_position.x = position.x;
-                    Editor.polygon_position.y = position.y;
-                }
+                if(Editor.current_tool==TOOL.POLYGON){
+                    if( Editor.selection.vertex ){
+                        if(Editor.vertices.length==0)break;
+                        position.x =  Editor.selection.vertex.x + Editor.selection.polygon.x;
+                        position.y =  Editor.selection.vertex.y + Editor.selection.polygon.y;                    
+                    }
+                    
+                    if(Editor.vertices.length==0){
+                        Editor.polygon_position.x = position.x;
+                        Editor.polygon_position.y = position.y;
+                    }
 
-                Editor.vertices.push( 
-                    new Vertex(
-                        position.x - Editor.polygon_position.x, 
-                        position.y - Editor.polygon_position.y,
-                    ) 
-                );
+                    Editor.vertices.push( 
+                        new Vertex(
+                            position.x - Editor.polygon_position.x, 
+                            position.y - Editor.polygon_position.y,
+                        ) 
+                    );
 
-                Editor.polygon = new Polygon(
-                    Editor.polygon_position.x, 
-                    Editor.polygon_position.y,
-                    [255,255,0],
-                    Editor.vertices,
-                    'temporary',
-                );
-                
-                Table.geometry[ Editor.current_polygon ] = new Polygon(
-                    Editor.polygon_position.x, 
-                    Editor.polygon_position.y,
-                    [255,0,0],
-                    Editor.vertices,
-                    'new poly',
-                );
+                    Editor.polygon = new Polygon(
+                        Editor.polygon_position.x, 
+                        Editor.polygon_position.y,
+                        [255,255,0],
+                        Editor.vertices,
+                        'temporary',
+                    );
+                    
+                    Table.geometry[ Editor.current_polygon ] = new Polygon(
+                        Editor.polygon_position.x, 
+                        Editor.polygon_position.y,
+                        [255,0,0],
+                        Editor.vertices,
+                        'new poly',
+                    );
+                }
                 break;
 
             case BUTTON.MIDDLE:                 
@@ -155,29 +165,6 @@ var Editor = {
 
 };
 
-function selectTool(name){
-    var nodes = document.getElementsByClassName('tool');
-    for(i in nodes){
-        nodes[i].className = 'toolbar-button tool';
-    }
-    var node = document.getElementById(name);
-    node.className = 'toolbar-button tool selected';
-
-    switch(name){
-        case 'select':
-            break;
-        case 'rotate':
-            break;
-        case 'move':
-            break;
-        case 'delete':
-            break;
-        case 'scale':
-            break;
-        case 'fit': //snap to grid
-            break;
-    }
-}
 
 function toggle(name){
     var status = false;
@@ -192,8 +179,14 @@ function toggle(name){
 
     switch(name){
         case 'grid':
+            Editor.snap_to_grid = status;
+            text = 'Snap to grid';
             break;
         case 'backdrop':
+            Table.render_backdrop = status;
+            text = 'Show bg image';
             break;
     }
+    Display.text.blink(`${text} ${status ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
+            
 }

@@ -12,6 +12,9 @@ var Table = {
     colission_mesh : [],
     initialized : false,
 
+    render_backdrop : true,
+    render_colission_bitmap : true,
+
     geometry : [],
     old_geometry : [
         new Polygon(
@@ -183,21 +186,21 @@ var Table = {
 
         if(!this.initialized)return;
         
-        
-        /*
-        var r,g,b,i=0,c=0;
-        for(var y=0;y<Table.height;y++){
-            for(var x=0;x<Table.width;x++){
-                r = this.data.data[i+0];
-                g = this.data.data[i+1];
-                b = this.data.data[i+2];
-                //Screen.putPixel(x,y,r,g,b);
-                Screen.putPixel(x,y,this.colission_mesh[c]*255,0,0);
-                i+=4;
-                c++;
+        if(Table.render_backdrop){
+            var r,g,b,i=0,c=0;
+            for(var y=0;y<Table.height;y++){
+                for(var x=0;x<Table.width;x++){
+                    r = this.data.data[i+0];
+                    g = this.data.data[i+1];
+                    b = this.data.data[i+2];
+                    if(r>0 || g>0 || b>0)Screen.putPixel(x,y,r,g,b);
+                    if(Table.render_colission_bitmap && this.colission_mesh[c])
+                        Screen.putPixel(x,y,this.colission_mesh[c]*255,0,0);
+                    i+=4;
+                    c++;
+                }
             }
         }
-        */
         
         for(polygon_index in Table.geometry){
             var polygon = Table.geometry[polygon_index];
