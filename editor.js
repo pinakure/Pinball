@@ -8,15 +8,6 @@ var Editor = {
 
     snap_to_grid        : false,
 
-    /*
-    vertices            : [],
-    grabbing_vertex     : null,
-
-    polygon_position    : {
-        x : 0,
-        y : 0,
-    },
-    */
     selection           : {
         polygon : null,
         vertex  : null,
