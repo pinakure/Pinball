@@ -34,24 +34,16 @@ const PolygonTool = {
             'temporary',
         );
     },
-    leftDrag : function(position){
-
-    },
-    leftUp : function(position){
-
-    },
+    leftDrag : function(position){},
+    leftUp : function(position){},
     middleDown : function(position){
         if( shift_on ) this.polygon.move(position.x, position.y);
         else this.polygon.moveCenter(position.x, position.y);
         this.position.x = position.x;
         this.position.y = position.y;        
     },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
+    middleDrag : function(position){},
+    middleUp : function(position){},
     rightDown : function(position){
         // Copy temporary polygon to table geometry
         Table.geometry.push(
@@ -65,12 +57,8 @@ const PolygonTool = {
         );
         this.vertices = new Array;
     },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
 
 const RotateTool = {
@@ -129,21 +117,11 @@ const MoveTool = {
             return false;
         }        
     },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
-    rightDown : function(position){
-
-    },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
 
 const EraserTool = {
@@ -184,30 +162,14 @@ const EraserTool = {
             return false;
         }        
     },
-    leftDrag : function(position){
-
-    },
-    leftUp : function(position){
-
-    },
-    middleDown : function(position){
-
-    },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
-    rightDown : function(position){
-
-    },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    leftDrag : function(position){},
+    leftUp : function(position){},
+    middleDown : function(position){},
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
 
 const SnapTool = {
@@ -420,4 +382,3 @@ var Tools = {
     },
     
 };
-
