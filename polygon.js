@@ -50,6 +50,8 @@ function Polygon(x, y, color=[255,0,0], vertices=[], name='Unnamed'){
 }
 
 Polygon.prototype.consolidate = function(){
+    // (Re)generate bounding box coordinates
+    // 
     var bounding_box = {
         sx : 9999,
         dx : -9999,
@@ -66,6 +68,7 @@ Polygon.prototype.consolidate = function(){
     }
     this.bounding_box = bounding_box;
     Editor.selection.polygon = this;
+    return this;
 }
 
 Polygon.prototype.resetFlags = function(){

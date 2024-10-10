@@ -1,13 +1,26 @@
+----------------
+ EDITOR 
+----------------
 x Seleccionar vertices de un poligono ya creado
 x Mover poligonos que ya existen
-- Modificar poligonos que ya existen
+x Modificar poligonos que ya existen
 x Generar encuadre de polígonos al momento de crearlos y dibujar el rectangulo de 	encuadre, esta será la primera linea de detección de colisiones, que seleccionará cuáles polígonos serán testados contra el objeto que interactuará con ellos.
+- Rotación de segmento o polígono entero
+- Espejo a segmento o polígono entero
+- Ceñir vertice o polígono entero a la cuadrícula
+- Escalado de segmento o polígono entero
+
+----------------
+ COLISIONES
+----------------
 - Pintar de diferente color los poligonos que estén colisionando con un objeto
 - Pintar de diferente color el vector normal de los segmentos que estén en colision
 - Modificar delta en función del normal con el que colisiona el objeto
-- Rotación de polígonos
 
 
+----------------
+ DISPLAY
+----------------
 - Efecto typewriter en Display
 - Efectos clásicos en Display
 - Convertir display en canvas (fuentes incluidas)

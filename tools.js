@@ -1,39 +1,37 @@
 const PolygonTool = {
+
+    polygon     : null,
+    vertices    : [],
+    position    : {
+        x : 0,
+        y : 0,
+    },
+
     leftDown : function(position){
+        // Force to use selected vertex coordinates if any vertex is selected, instead of mouse coordinates
         if( Editor.selection.vertex ){
-            if(Editor.vertices.length==0)return false;
             position.x =  Editor.selection.vertex.x + Editor.selection.polygon.x;
             position.y =  Editor.selection.vertex.y + Editor.selection.polygon.y;                    
         }
         
-        if(Editor.vertices.length==0){
-            Editor.polygon_position.x = position.x;
-            Editor.polygon_position.y = position.y;
+        if( this.vertices.length==0 ){
+            this.position.x = position.x;
+            this.position.y = position.y;
         }
 
-        Editor.vertices.push( 
+        this.vertices.push( 
             new Vertex(
-                position.x - Editor.polygon_position.x, 
-                position.y - Editor.polygon_position.y,
+                position.x - this.position.x, 
+                position.y - this.position.y,
             ) 
         );
-
-        // Please write this properly, store a temp object and add it to 
-        // table geometry only when polygon is finished.
-        Editor.polygon = new Polygon(
-            Editor.polygon_position.x, 
-            Editor.polygon_position.y,
+        // (Re)generate temporary polygon
+        this.polygon = new Polygon(
+            this.position.x, 
+            this.position.y,
             [255,255,0],
-            Editor.vertices,
+            this.vertices,
             'temporary',
-        );
-        
-        Table.geometry[ Editor.current_polygon ] = new Polygon(
-            Editor.polygon_position.x, 
-            Editor.polygon_position.y,
-            [255,0,0],
-            Editor.vertices,
-            'new poly',
         );
     },
     leftDrag : function(position){
@@ -43,7 +41,10 @@ const PolygonTool = {
 
     },
     middleDown : function(position){
-
+        if( shift_on ) this.polygon.move(position.x, position.y);
+        else this.polygon.moveCenter(position.x, position.y);
+        this.position.x = position.x;
+        this.position.y = position.y;        
     },
     middleDrag : function(position){
 
@@ -52,17 +53,17 @@ const PolygonTool = {
 
     },
     rightDown : function(position){
-        var polygon = new Polygon(
-            Editor.polygon_position.x, 
-            Editor.polygon_position.y,
-            [255,0,0],
-            Editor.vertices,
-            'new poly',
+        // Copy temporary polygon to table geometry
+        Table.geometry.push(
+            new Polygon(
+                this.position.x, 
+                this.position.y,
+                [255,0,0],
+                this.vertices,
+                'new poly',
+            ).consolidate()
         );
-        polygon.consolidate();
-        Table.geometry[ Editor.current_polygon ] = polygon;
-        Editor.current_polygon++;
-        Editor.vertices = new Array;
+        this.vertices = new Array;
     },
     rightDrag : function(position){
 
@@ -104,25 +105,29 @@ const RotateTool = {
 
 
 const MoveTool = {
-    leftDown : function(position){
 
+    drag : null,
+
+    leftDown : function(position){
+        if( !Editor.selection.vertex ) return;
+        this.drag = Editor.selection.vertex;
     },
     leftDrag : function(position){
-
+        if( !this.drag ) return;
+        this.drag.x = position.x - Editor.selection.polygon.x;
+        this.drag.y = position.y - Editor.selection.polygon.y;
     },
     leftUp : function(position){
-
+        if( !this.drag ) return;
+        Editor.selection.polygon.consolidate();
+        this.drag = null;
     },
     middleDown : function(position){
-        if( Editor.vertices.length == 0 ){
+        if( Editor.selection.polygon ){
             if( shift_on ) Editor.selection.polygon.move(position.x, position.y);
             else Editor.selection.polygon.moveCenter(position.x, position.y);
             return false;
-        }
-        if( shift_on ) Table.geometry[ Editor.current_polygon ].move( position.x, position.y );
-        else Table.geometry[ Editor.current_polygon ].moveCenter( position.x, position.y );
-        Editor.polygon_position.x = position.x;
-        Editor.polygon_position.y = position.y;
+        }        
     },
     middleDrag : function(position){
 
@@ -143,7 +148,41 @@ const MoveTool = {
 
 const EraserTool = {
     leftDown : function(position){
-
+        if( Editor.selection.polygon ){
+            if( shift_on ) {
+                // Delete whole polygon
+                Table.geometry.splice( 
+                    Table.geometry.indexOf( 
+                        Editor.selection.polygon
+                    ), 
+                    1
+                );
+                Editor.selection.polygon = null;
+                Editor.selection.vertex = null;
+            } else {
+                if( Editor.selection.vertex ){
+                    // Delete just a vertex
+                    Editor.selection.polygon.vertices.splice(
+                        Editor.selection.polygon.vertices.indexOf( 
+                            Editor.selection.vertex 
+                        ),
+                        1
+                    );
+                    Editor.selection.vertex = null;
+                    // If, after deleting a vertex the polygon has no vertices left, delete the polygon too
+                    if(Editor.selection.polygon.vertices.length == 0){
+                        Table.geometry.splice( 
+                            Table.geometry.indexOf( 
+                                Editor.selection.polygon
+                            ), 
+                            1
+                        );
+                        Editor.selection.polygon = null;
+                    }
+                }
+            }
+            return false;
+        }        
     },
     leftDrag : function(position){
 
@@ -287,8 +326,6 @@ var Tools = {
         }
         Table.draw();
         Editor.update();
-        console.clear();
-        console.log(`Dragging mouse ${position.x},${position.y}`);
         return false;        
     },
     leftMouseUp : function(position){

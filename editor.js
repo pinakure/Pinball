@@ -6,9 +6,9 @@ var Editor = {
 
     current_tool        : TOOL.POLYGON,
 
-    polygon             : null,
-    current_polygon     : 0,//rename to polygon_index
     snap_to_grid        : false,
+
+    /*
     vertices            : [],
     grabbing_vertex     : null,
 
@@ -16,13 +16,15 @@ var Editor = {
         x : 0,
         y : 0,
     },
-    mouse_position      : {
-        x : 0,
-        y : 0,
-    },
+    */
     selection           : {
         polygon : null,
         vertex  : null,
+    },
+
+    mouse_position      : {
+        x : 0,
+        y : 0,
     },
     
     init : function(){
@@ -52,6 +54,7 @@ var Editor = {
             case BUTTON.MIDDLE  : return Tools.middleMouseDrag(position);
             case BUTTON.RIGHT   : return Tools.rightMouseDrag(position);
         }
+        Editor.update();
     },
 
     handleUp : function(event){
@@ -60,11 +63,10 @@ var Editor = {
         
         event.stopPropagation();  
         event.preventDefault();
-
-        switch(event.buttons){
-            case BUTTON.LEFT    : return Tools.leftMouseUp(position);
-            case BUTTON.MIDDLE  : return Tools.middleMouseUp(position);
-            case BUTTON.RIGHT   : return Tools.rightMouseUp(position);
+        switch(event.which){
+            case 1  : return Tools.leftMouseUp(position);
+            case 2  : return Tools.middleMouseUp(position);
+            case 3  : return Tools.rightMouseUp(position);
         }
     },
     
@@ -83,10 +85,13 @@ var Editor = {
     },
 
     draw : function(){
-        if( Editor.vertices.length > 0 ){       
-            var last = Editor.vertices[ Editor.vertices.length-1 ];
-            sx = Editor.polygon_position.x + last.x;
-            sy = Editor.polygon_position.y + last.y;
+        if( Editor.current_tool == TOOL.POLYGON && PolygonTool.vertices.length > 0){
+        
+            PolygonTool.polygon.draw();
+
+            var last = PolygonTool.vertices[ PolygonTool.vertices.length-1 ];
+            sx = PolygonTool.position.x + last.x;
+            sy = PolygonTool.position.y + last.y;
             dx = Editor.mouse_position.x;
             dy = Editor.mouse_position.y;
             Screen.line(sx,sy,dx,dy,128,0,128);
