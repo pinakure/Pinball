@@ -9,6 +9,7 @@ x Generar encuadre de polígonos al momento de crearlos y dibujar el rectangulo 
 - Espejo a segmento o polígono entero
 - Ceñir vertice o polígono entero a la cuadrícula
 - Escalado de segmento o polígono entero
+- Mostrar / Ocultar normales
 
 ----------------
  COLISIONES
