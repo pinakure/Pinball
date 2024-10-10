@@ -43,108 +43,43 @@ var Editor = {
     handleHover : function(event){
         const position = getMousePos(event);
         Editor.mouse_position = position;
-        Table.draw();
-        Editor.update();
-        return false;
+        
+        event.stopPropagation();  
+        event.preventDefault();
+        
+        switch(event.buttons){
+            case BUTTON.LEFT    : return Tools.leftMouseDrag(position);
+            case BUTTON.MIDDLE  : return Tools.middleMouseDrag(position);
+            case BUTTON.RIGHT   : return Tools.rightMouseDrag(position);
+        }
     },
 
     handleUp : function(event){
-        
         const position = getMousePos(event);
+        Editor.mouse_position = position;
         
         event.stopPropagation();  
+        event.preventDefault();
+
         switch(event.buttons){
-            case BUTTON.LEFT: 
-                break;
-
-            case BUTTON.RIGHT:
-                if(Editor.grabbing_vertex){
-
-                }
-                Editor.grabbing_vertex = false;
-                break;
+            case BUTTON.LEFT    : return Tools.leftMouseUp(position);
+            case BUTTON.MIDDLE  : return Tools.middleMouseUp(position);
+            case BUTTON.RIGHT   : return Tools.rightMouseUp(position);
         }
-        Editor.update();
     },
     
     handleDown : function(event){
+        const position = getMousePos(event);
+        Editor.mouse_position = position;
         
-        var position = getMousePos(event);
-        
-        event.stopPropagation();  
+        event.stopPropagation();
+        event.preventDefault();
+
         switch(event.buttons){
-            case BUTTON.LEFT: 
-                if(Editor.current_tool==TOOL.POLYGON){
-                    if( Editor.selection.vertex ){
-                        if(Editor.vertices.length==0)break;
-                        position.x =  Editor.selection.vertex.x + Editor.selection.polygon.x;
-                        position.y =  Editor.selection.vertex.y + Editor.selection.polygon.y;                    
-                    }
-                    
-                    if(Editor.vertices.length==0){
-                        Editor.polygon_position.x = position.x;
-                        Editor.polygon_position.y = position.y;
-                    }
-
-                    Editor.vertices.push( 
-                        new Vertex(
-                            position.x - Editor.polygon_position.x, 
-                            position.y - Editor.polygon_position.y,
-                        ) 
-                    );
-
-                    // Please write this properly, store a temp object and add it to 
-                    // table geometry only when polygon is finished.
-                }
-                Editor.polygon = new Polygon(
-                    Editor.polygon_position.x, 
-                    Editor.polygon_position.y,
-                    [255,255,0],
-                    Editor.vertices,
-                    'temporary',
-                );
-                    
-                    Table.geometry[ Editor.current_polygon ] = new Polygon(
-                        Editor.polygon_position.x, 
-                        Editor.polygon_position.y,
-                        [255,0,0],
-                        Editor.vertices,
-                        'new poly',
-                    );
-                break;
-
-            case BUTTON.MIDDLE:                 
-                if( Editor.vertices.length == 0 ){
-                    if( shift_on ) Editor.selection.polygon.move(position.x, position.y);
-                    else Editor.selection.polygon.moveCenter(position.x, position.y);
-                    break;
-                }
-                if( shift_on ) Table.geometry[ Editor.current_polygon ].move( position.x, position.y );
-                else Table.geometry[ Editor.current_polygon ].moveCenter( position.x, position.y );
-                Editor.polygon_position.x = position.x;
-                Editor.polygon_position.y = position.y;
-                event.stopPropagation();
-                event.preventDefault();
-                break;
-
-            case BUTTON.RIGHT:
-                var polygon = new Polygon(
-                    Editor.polygon_position.x, 
-                    Editor.polygon_position.y,
-                    [255,0,0],
-                    Editor.vertices,
-                    'new poly',
-                );
-                polygon.consolidate();
-                Table.geometry[ Editor.current_polygon ] = polygon;
-                Editor.current_polygon++;
-                Editor.vertices = new Array;
-                break;
-        };          
-        //Table.draw();
-        //Editor.draw();
-        //Screen.update();        
-        return false;
+            case BUTTON.LEFT    : return Tools.leftMouseDown(position);
+            case BUTTON.MIDDLE  : return Tools.middleMouseDown(position);
+            case BUTTON.RIGHT   : return Tools.rightMouseDown(position);
+        };
     },
 
     draw : function(){

@@ -50,10 +50,10 @@ const BALL_DIRECTION_RIGHT  = 0x8;
 
 const TOOL = {
     POLYGON : 0,
-    ROTATE : 1,
-    MOVE : 2,
-    ERASER : 3,
-    SNAP : 4,
-    FLIP : 5,
-    EXPAND : 6,    
+    ROTATE  : 1,
+    MOVE    : 2,
+    ERASER  : 3,
+    SNAP    : 4,
+    FLIP    : 5,
+    EXPAND  : 6,
 };

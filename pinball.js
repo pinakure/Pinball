@@ -59,7 +59,7 @@ function handleKeyDown( event ){
             alt_on = true;
             break;
         case KEY_B:
-            var node = document.getElementsByClassName('boss')[0];
+            var node = document.getElementById('boss');
             Game.boss_screen ^= 1;
             if(Game.boss_screen){
                 node.setAttribute('style', '');
