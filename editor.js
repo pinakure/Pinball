@@ -8,6 +8,10 @@ var Editor = {
 
     snap_to_grid        : false,
 
+    draw_normals        : false,
+
+    grid_size           : 4,
+
     selection           : {
         polygon : null,
         vertex  : null,
@@ -117,6 +121,10 @@ function toggle(name){
         case 'backdrop':
             Table.render_backdrop = status;
             text = 'Show bg image';
+            break;
+        case 'normals':
+            Editor.draw_normals = status;
+            text = 'Normals';
             break;
     }
     Display.text.blink(`${text} ${status ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);

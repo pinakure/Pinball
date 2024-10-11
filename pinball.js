@@ -9,8 +9,8 @@ function  getMousePos(evt) {
     scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
     if( Editor.snap_to_grid ){
         return {
-            x: parseInt(parseInt((evt.clientX - rect.left) * scaleX )/4)*4, 
-            y: parseInt(parseInt((evt.clientY - rect.top ) * scaleY )/4)*4, 
+            x: parseInt(parseInt((evt.clientX - rect.left) * scaleX )/Editor.grid_size)*Editor.grid_size, 
+            y: parseInt(parseInt((evt.clientY - rect.top ) * scaleY )/Editor.grid_size)*Editor.grid_size, 
         }
     } else return {
         x: parseInt((evt.clientX - rect.left) * scaleX ), // scale mouse coordinates after they have

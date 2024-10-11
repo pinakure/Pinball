@@ -144,29 +144,31 @@ Polygon.prototype.draw = function(){
         var distance = Math.sqrt(((vertex.x-last_vertex.x)*(vertex.x-last_vertex.x))+((vertex.y-last_vertex.y)*(vertex.y-last_vertex.y)));
         // draw normal vectors
         if(Math.abs(distance)<1)continue;
-        var normal = {
-            x : (((this.x+vertex.x) - (this.x+last_vertex.x)) / distance) / 2,
-            y : (((this.y+vertex.y) - (this.y+last_vertex.y)) / distance) / 2,
-        };
-        var vector = {
-            x : normal.x * 16,
-            y : normal.y * 16,
-        };
-        var offset = {
-            x : this.x+((vertex.x+last_vertex.x)/2),
-            y : this.y+((vertex.y+last_vertex.y)/2),
-        };
-        Screen.line(
-            -normal.y, normal.x,
-            vector.y ,-vector.x, 
-            168,128,128,
-            offset.x, 
-            offset.y,
-        );
+        if(Editor.draw_normals){
+            var normal = {
+                x : (((this.x+vertex.x) - (this.x+last_vertex.x)) / distance) / 2,
+                y : (((this.y+vertex.y) - (this.y+last_vertex.y)) / distance) / 2,
+            };
+            var vector = {
+                x : normal.x * 16,
+                y : normal.y * 16,
+            };
+            var offset = {
+                x : this.x+((vertex.x+last_vertex.x)/2),
+                y : this.y+((vertex.y+last_vertex.y)/2),
+            };
+            Screen.line(
+                -normal.y, normal.x,
+                vector.y ,-vector.x, 
+                168,128,128,
+                offset.x, 
+                offset.y,
+            );
+            // Draw tip of vector direction
+            //screen.putPixel(offset.x+-vector.y, offset.y+vector.x, 0,255,0);
+            Screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,255,255);
+        }
         
-        // Draw tip of vector direction
-        //screen.putPixel(offset.x+-vector.y, offset.y+vector.x, 0,255,0);
-        Screen.putPixel(offset.x+vector.y , offset.y+-vector.x, 255,255,255);
         
         last_vertex = vertex;        
     }
@@ -201,4 +203,14 @@ Polygon.prototype.move = function(x,y){
     this.x += delta.x;
     this.y += delta.y;    
     this.consolidate();
+}
+
+Polygon.prototype.serialize = function(){
+    var vertices = '';
+    for( vertex_index in this.vertices ){
+        var vertex = this.vertices[vertex_index];
+        vertices += `new Vertex(${parseInt(vertex.x)}, ${parseInt(vertex.y)}),`
+    }
+    var serialized = `new Polygon(${this.x}, ${this.y},[${this.color[0]},${this.color[1]},${this.color[2]}],[ ${vertices} ], '${this.name}'),`;
+    return serialized;
 }

@@ -1,8 +1,3 @@
-
-var tables = [
-    
-];
-
 var Table = {
 
     width : 240,
@@ -15,7 +10,7 @@ var Table = {
     render_backdrop : true,
     render_colission_bitmap : true,
 
-    geometry : [],
+    geometry : Geometry,
     old_geometry : [
         new Polygon(
             120, 160,
@@ -206,6 +201,15 @@ var Table = {
             var polygon = Table.geometry[polygon_index];
             polygon.draw();
         }
+    },
+
+    serialize : function(){
+        var serialized = '';
+        for( polygon_index in this.geometry ){
+            var polygon = this.geometry[ polygon_index ];
+            serialized += polygon.serialize();
+        }
+        return `const Geometry = [${serialized}];`;
     },
 
 };

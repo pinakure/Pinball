@@ -9,14 +9,10 @@ var Infobar = {
             tool    : TOOL.POLYGON,            
             actions : {
                 LB : 'Create Vertex',
-                MB : 'Move Center',
                 RB : 'Finish Polygon',
-                shift : {
-                },
-                alt : {
-                },
-                ctrl : {
-                },
+                shift : {},
+                alt : {},
+                ctrl : {},
             },
         },
         rotate    : {
@@ -26,15 +22,10 @@ var Infobar = {
             keycode : KEY_R,
             tool    : TOOL.ROTATE,
             actions : {
-                LB : 'Select polygon',
-                WHEEL : 'Inc/Decrease',
-                shift : {
-                    WHEEL : 'Quantized Rotation',
-                },
-                alt : {                
-                },
-                ctrl : {
-                },
+                LB : 'Rotate Polygon',
+                shift : {},
+                alt : {},
+                ctrl : {},
             },
         },
         move  : {
@@ -49,10 +40,8 @@ var Infobar = {
                 shift : {
                     MB : 'Move Polygon',
                 },
-                alt : {                
-                },
-                ctrl : {
-                },
+                alt : {},
+                ctrl : {},
             },
         },
         eraser    : {
@@ -66,10 +55,8 @@ var Infobar = {
                 shift : {
                     LB : 'Erase Polygon',
                 },
-                alt : {                
-                },
-                ctrl : {
-                },
+                alt : {},
+                ctrl : {},
             },
         },
         expand : {
@@ -79,14 +66,12 @@ var Infobar = {
             keycode : KEY_X,
             tool    : TOOL.EXPAND,
             actions : {
-                WHEEL : 'Resize Polygon',
+                LB : 'Resize Polygon',
                 shift : {
-                    WHEEL : 'Quantized Resizing',
+                    LB : 'Big Resize Polygon',
                 },
-                alt : {                
-                },
-                ctrl : {
-                },
+                alt : {},
+                ctrl : {},
             },
         },
         snap   : {
@@ -100,10 +85,8 @@ var Infobar = {
                 shift : {
                     LB : 'Snap Polygon',
                 },
-                alt : {                
-                },
-                ctrl : {
-                },
+                alt : {},
+                ctrl : {},
             },
         },
         flip  : {
@@ -113,16 +96,12 @@ var Infobar = {
             keycode : KEY_F,
             tool    : TOOL.FLIP,
             actions : {
-                LB : 'HFlip Edge',
-                RB : 'VFlip Edge',
+                LB : 'HFlip Polygon',
                 shift : {
-                    LB : 'HFlip Polygon',
-                    RB : 'VFlip Polygon',
+                    LB : 'VFlip Polygon',
                 },
-                alt : {                
-                },
-                ctrl : {
-                },
+                alt : {},
+                ctrl : {},
             },
         },
     },
@@ -132,13 +111,19 @@ var Infobar = {
             icon    : 'th',
             hotkey  : 'G',
             keycode : KEY_G,
-            title   : 'Grid',
+            title   : 'Toggle Grid Snapping',
         },
         backdrop : {
             icon    : 'image',
             hotkey  : 'I',
             keycode : KEY_I,
-            title   : 'Show Backdrop Image',
+            title   : 'Toggle Backdrop Image',
+        },
+        normals : {
+            icon    : 'external-link-square-alt',
+            hotkey  : 'N',
+            keycode : KEY_N,
+            title   : 'Toggle Normals',
         },
     },
 
@@ -148,6 +133,7 @@ var Infobar = {
             var info = Infobar.tools[key];            
             node.innerHTML += `<button onclick="Infobar.selectTool('${key}')" class="toolbar-button tool" id="${key}" title="${info.title} (${info.hotkey})"><i class="fa fa-${info.icon}"></i></button>`;
         }
+        
         node.innerHTML += '<hr style="border-color: #a0a0a0;"/>';
     
         for(key in Infobar.toggles){
@@ -189,23 +175,6 @@ var Infobar = {
         var node = document.getElementById(name);
         node.className = 'toolbar-button tool selected';
 
-        switch(info.tool){
-            case TOOL.POLYGON:
-                console.log(info.title,'selected');
-                break;
-            case TOOL.ROTATE:
-                break;
-            case TOOL.MOVE:
-                break;
-            case TOOL.ERASER:
-                break;
-            case TOOL.EXPAND:
-                break;
-            case TOOL.SNAP: 
-                break;
-            case TOOL.FLIP: 
-                break;
-        }
         Display.text.blink(`${info.title}`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
         Editor.current_tool = info.tool;
     },

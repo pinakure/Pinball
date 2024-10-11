@@ -36,12 +36,7 @@ const PolygonTool = {
     },
     leftDrag : function(position){},
     leftUp : function(position){},
-    middleDown : function(position){
-        if( shift_on ) this.polygon.move(position.x, position.y);
-        else this.polygon.moveCenter(position.x, position.y);
-        this.position.x = position.x;
-        this.position.y = position.y;        
-    },
+    middleDown : function(position){},
     middleDrag : function(position){},
     middleUp : function(position){},
     rightDown : function(position){
@@ -62,35 +57,55 @@ const PolygonTool = {
 };
 
 const RotateTool = {
-    leftDown : function(position){
+    
+    drag : null,
+    last_position : null,
+    angle : 0,
 
+    leftDown : function(position){
+        if( !Editor.selection.polygon ) return;
+        this.drag = Editor.selection.polygon;
+        this.last_position = position;
+        this.angle = 0;
     },
     leftDrag : function(position){
+        if( !this.drag ) return;
+        var delta = (position.x+position.y)-(this.last_position.x+this.last_position.y);
+        
+        if(delta>0) this.angle = 1;
+        else if(delta<0) this.angle = -1;
+        else this.angle = 0;
+        
+        delta = this.angle * Math.PI / 180;
 
+        var origin = {
+            x : this.drag.x ,
+            y : this.drag.y ,
+        };
+        this.drag.x = 0;
+        this.drag.y = 0;
+        for( vertex_index in this.drag.vertices ){
+            vertex = this.drag.vertices[ vertex_index ];
+            vertex.x = this.drag.x + (Math.cos(delta) * (vertex.x-this.drag.x)) + Math.sin(delta) * (vertex.y-this.drag.y);
+            vertex.y = this.drag.y + (-Math.sin(delta) * (vertex.x-this.drag.x)) + Math.cos(delta) * (vertex.y-this.drag.y);
+        }
+        this.drag.x = origin.x;
+        this.drag.y = origin.y;
+        this.drag.consolidate();
+        this.last_position = position;
     },
     leftUp : function(position){
-
+        if( !this.drag ) return;
+        this.drag.consolidate();
+        this.drag = null;
     },
-    middleDown : function(position){
-
-    },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
-    rightDown : function(position){
-
-    },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    middleDown : function(position){},
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
-
 
 const MoveTool = {
 
@@ -104,6 +119,7 @@ const MoveTool = {
         if( !this.drag ) return;
         this.drag.x = position.x - Editor.selection.polygon.x;
         this.drag.y = position.y - Editor.selection.polygon.y;
+        Editor.selection.polygon.consolidate();
     },
     leftUp : function(position){
         if( !this.drag ) return;
@@ -115,7 +131,7 @@ const MoveTool = {
             if( shift_on ) Editor.selection.polygon.move(position.x, position.y);
             else Editor.selection.polygon.moveCenter(position.x, position.y);
             return false;
-        }        
+        }
     },
     middleDrag : function(position){},
     middleUp : function(position){},
@@ -123,7 +139,6 @@ const MoveTool = {
     rightDrag : function(position){},
     rightUp : function(position){},
 };
-
 const EraserTool = {
     leftDown : function(position){
         if( Editor.selection.polygon ){
@@ -171,77 +186,118 @@ const EraserTool = {
     rightDrag : function(position){},
     rightUp : function(position){},
 };
-
 const SnapTool = {
     leftDown : function(position){
-
+        if( shift_on ){
+            // Snap all polygon vertices
+            if( Editor.selection.polygon ){
+                for( vertex_index in Editor.selection.polygon.vertices ){
+                    var vertex = Editor.selection.polygon.vertices[ vertex_index ];
+                    vertex.x = parseInt(vertex.x / Editor.grid_size);
+                    vertex.y = parseInt(vertex.y / Editor.grid_size);
+                    vertex.x *= Editor.grid_size;
+                    vertex.y *= Editor.grid_size;
+                    Editor.selection.polygon.consolidate();                    
+                }
+            }
+        } else {
+            // Snap only this vertex
+            if( Editor.selection.vertex ){
+                Editor.selection.vertex.x = parseInt(Editor.selection.vertex.x / Editor.grid_size);
+                Editor.selection.vertex.y = parseInt(Editor.selection.vertex.y / Editor.grid_size);
+                Editor.selection.vertex.x *= Editor.grid_size;
+                Editor.selection.vertex.y *= Editor.grid_size;
+                Editor.selection.polygon.consolidate();
+            }
+        }
     },
-    leftDrag : function(position){
-
-    },
-    leftUp : function(position){
-
-    },
-    middleDown : function(position){
-
-    },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
-    rightDown : function(position){
-
-    },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    leftDrag : function(position){},
+    leftUp : function(position){},
+    middleDown : function(position){},
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
-
-
 const FlipTool = {
     leftDown : function(position){
-
+        if( Editor.selection.polygon ){
+            var polygon = Editor.selection.polygon;
+            if( shift_on ){
+                // Flip polygon vertically
+                for( vertex_index in Editor.selection.polygon.vertices ){
+                    var vertex = Editor.selection.polygon.vertices[ vertex_index ];
+                    vertex.y = -vertex.y;
+                }
+                Editor.selection.polygon.consolidate();
+            } else {
+                // Flip polygon horizontally
+                for( vertex_index in Editor.selection.polygon.vertices ){
+                    var vertex = Editor.selection.polygon.vertices[ vertex_index ];
+                    vertex.x = -vertex.x;
+                }
+                Editor.selection.polygon.consolidate();            
+            }
+        }
     },
-    leftDrag : function(position){
-
-    },
-    leftUp : function(position){
-
-    },
-    middleDown : function(position){
-
-    },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
-    rightDown : function(position){
-
-    },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    leftDrag : function(position){},
+    leftUp : function(position){},
+    middleDown : function(position){},
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
 
 const ExpandTool = {
-    leftDown : function(position){
+    
+    drag : null,
+    last_position : null,
 
+    leftDown : function(position){
+        if( !Editor.selection.polygon ) return;
+        this.drag = Editor.selection.polygon;
+        this.last_position = position;
     },
     leftDrag : function(position){
+        if( !this.drag ) return;
+        var delta = (position.x+position.y)-(this.last_position.x+this.last_position.y);
+        
+        if(delta>0) delta = shift_on ? 1.1 : 1.01;
+        else if(delta<0) delta = shift_on ? 0.9 : 0.99;
+        else delta = 1;
 
+        var origin = {
+            x : this.drag.x,
+            y : this.drag.y,
+        };
+
+        this.drag.x = 0;
+        this.drag.y = 0;
+        
+        for( vertex_index in this.drag.vertices ){
+            var vertex = this.drag.vertices[ vertex_index ];
+            var distance = {
+                x : vertex.x,
+                y : vertex.y,
+            };
+            
+            vertex.x *= delta;
+            vertex.y *= delta;
+        }
+        this.drag.x = origin.x;
+        this.drag.y = origin.y;
+        
+        this.drag.consolidate();
+        this.last_position = position;
     },
     leftUp : function(position){
-
+        if( !this.drag ) return;
+        this.drag.consolidate();
+        this.drag = null;
+        this.last_position = null;
     },
     middleDown : function(position){
 
@@ -274,6 +330,7 @@ var Tools = {
             case TOOL.FLIP      : FlipTool.leftDown(position); break;
             case TOOL.EXPAND    : ExpandTool.leftDown(position); break;
         }
+        navigator.clipboard.writeText( Table.serialize() );
         return false;
     },
     leftMouseDrag : function(position){
@@ -288,6 +345,7 @@ var Tools = {
         }
         Table.draw();
         Editor.update();
+        navigator.clipboard.writeText( Table.serialize() );
         return false;        
     },
     leftMouseUp : function(position){
@@ -301,6 +359,7 @@ var Tools = {
             case TOOL.EXPAND    : ExpandTool.leftUp(position); break;
         }
         Editor.update();
+        navigator.clipboard.writeText( Table.serialize() );
         return false;
     },
 
@@ -314,6 +373,7 @@ var Tools = {
             case TOOL.FLIP      : FlipTool.middleDown(position); break;
             case TOOL.EXPAND    : ExpandTool.middleDown(position); break;
         }
+        navigator.clipboard.writeText( Table.serialize() );
         return false;
     },
     middleMouseDrag : function(position){
@@ -328,6 +388,7 @@ var Tools = {
         }
         Table.draw();
         Editor.update();
+        navigator.clipboard.writeText( Table.serialize() );
         return false;        
     },
     middleMouseUp : function(position){
@@ -341,6 +402,7 @@ var Tools = {
             case TOOL.EXPAND    : ExpandTool.middleUp(position); break;
         }
         Editor.update();
+        navigator.clipboard.writeText( Table.serialize() );
     },
     
     rightMouseDown : function(position){
@@ -353,6 +415,7 @@ var Tools = {
             case TOOL.FLIP      : FlipTool.rightDown(position); break;
             case TOOL.EXPAND    : ExpandTool.rightDown(position); break;
         }
+        navigator.clipboard.writeText( Table.serialize() );
     },
     rightMouseDrag : function(position){
         switch(Editor.current_tool){
@@ -366,6 +429,7 @@ var Tools = {
         }
         Table.draw();
         Editor.update();
+        navigator.clipboard.writeText( Table.serialize() );
         return false;        
     },    
     rightMouseUp : function(position){
@@ -379,6 +443,7 @@ var Tools = {
             case TOOL.EXPAND    : ExpandTool.rightUp(position); break;
         }        
         Editor.update();
+        navigator.clipboard.writeText( Table.serialize() );
     },
     
 };

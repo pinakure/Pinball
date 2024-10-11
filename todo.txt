@@ -5,11 +5,11 @@ x Seleccionar vertices de un poligono ya creado
 x Mover poligonos que ya existen
 x Modificar poligonos que ya existen
 x Generar encuadre de polígonos al momento de crearlos y dibujar el rectangulo de 	encuadre, esta será la primera linea de detección de colisiones, que seleccionará cuáles polígonos serán testados contra el objeto que interactuará con ellos.
-- Rotación de segmento o polígono entero
-- Espejo a segmento o polígono entero
-- Ceñir vertice o polígono entero a la cuadrícula
-- Escalado de segmento o polígono entero
-- Mostrar / Ocultar normales
+x Rotación de polígono entero
+x Espejo a segmento o polígono entero
+x Ceñir vertice o polígono entero a la cuadrícula
+x Mostrar / Ocultar normales
+x Escalado de segmento o polígono entero
 
 ----------------
  COLISIONES
