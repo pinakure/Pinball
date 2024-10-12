@@ -50,6 +50,10 @@ var Table = {
             }    
         };
 
+        for(polygon in Table.geometry){
+            var polygon = Table.geometry[polygon];
+            polygon.consolidate();
+        }
         for(flipper_index in Table.flippers){
             var flipper = Table.flippers[flipper_index];
             flipper.consolidate();
