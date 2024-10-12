@@ -1,85 +1,24 @@
 var Table = {
 
     width : 240,
+
     height : 320,
 
     data : null,
+
     colission_mesh : [],
+
     initialized : false,
 
     render_backdrop : true,
+
     render_colission_bitmap : true,
 
     geometry : Geometry,
-    old_geometry : [
-        new Polygon(
-            120, 160,
-            [255,255,0],
-            [
-                new Vertex(-120, -160),
-                new Vertex( 119, -160),
-                new Vertex( 119,  159),
-                new Vertex(-120,  159),
-            ],
-            'boundary'
-        ),
-        new Polygon(
-            142, 262,
-            [255,255,0],
-            [
-                new Vertex( -30,   12),
-                new Vertex( -30,   15),
-                new Vertex( -28,   17),
-                new Vertex(   6,    8),
-                new Vertex(   8,    6),
-                new Vertex(   9,    4),
-                new Vertex(   9,    0),
-                new Vertex(   8,   -2),
-                new Vertex(   6,   -4),
-                new Vertex(   5,   -5),
-                new Vertex(   0,   -5),
-                new Vertex( -29,   12),
-            ],
-            'right-flipper'
-        ),
-        new Polygon(
-             66, 262,
-             [255,255,0],
-            [
-                new Vertex(  30,   12),
-                new Vertex(  30,   15),
-                new Vertex(  28,   17),
-                new Vertex(  -6,    8),
-                new Vertex(  -8,    6),
-                new Vertex(  -9,    4),
-                new Vertex(  -9,    0),
-                new Vertex(  -8,   -2),
-                new Vertex(  -6,   -4),
-                new Vertex(  -5,   -5),
-                new Vertex(  -0,   -5),
-                new Vertex(  29,   12),
-            ],
-            'left-flipper'
-        ),
-        new Polygon(
-           232, 319,
-           [255,255,0],
-           [
-               new Vertex(  0,     0),
-               new Vertex(  0,  -295),
-               new Vertex( -3,  -304),               
-               new Vertex( -5,  -308),               
-               new Vertex(-11,  -314),               
-               new Vertex(-15,  -316),               
-               new Vertex(-19,  -317),               
-               new Vertex(-29,  -318),               
-               new Vertex(-30,  -317),               
-               new Vertex(-33,  -317),               
-               new Vertex(-37,  -315),               
-           ],
-           'launch-channel'
-       ),
-    ],
+    
+    flippers : Flippers,
+    
+    bumpers  : Bumpers,
 
     init : function(){
 
@@ -110,6 +49,17 @@ var Table = {
                 }
             }    
         };
+
+        for(flipper_index in Table.flippers){
+            var flipper = Table.flippers[flipper_index];
+            flipper.consolidate();
+        }
+        for(bumper_index in Table.bumpers){
+            var bumper = Table.bumpers[bumper_index];
+            bumper.consolidate();
+        }
+        Editor.selection.polygon = null;
+
     },
 
     normalizeDelta : function(delta){
@@ -174,6 +124,8 @@ var Table = {
                 Editor.selection.vertex = vertex;
             };
         }
+        
+        
         this.draw();
     },
 
@@ -200,6 +152,14 @@ var Table = {
         for(polygon_index in Table.geometry){
             var polygon = Table.geometry[polygon_index];
             polygon.draw();
+        }
+        for(flipper_index in Table.flippers){
+            var flipper = Table.flippers[flipper_index];
+            flipper.draw();
+        }
+        for(bumper_index in Table.bumpers){
+            var bumper = Table.bumpers[bumper_index];
+            bumper.draw();
         }
     },
 
