@@ -97,13 +97,14 @@ var Infobar = {
             tool    : TOOL.FLIP,
             actions : {
                 LB : 'HFlip Polygon',
+                RB : 'Flip Normals',
                 shift : {
                     LB : 'VFlip Polygon',
                 },
                 alt : {},
                 ctrl : {},
             },
-        },
+        },        
     },
 
     toggles : {

@@ -10,6 +10,9 @@ x Espejo a segmento o polígono entero
 x Ceñir vertice o polígono entero a la cuadrícula
 x Mostrar / Ocultar normales
 x Escalado de segmento o polígono entero
+x Flipear normales
+- Posibilidad de mover solo el eje x o el eje y (dos toggles)
+- Herramienta de clonado de polígonos
 
 ----------------
  COLISIONES

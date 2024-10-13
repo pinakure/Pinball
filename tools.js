@@ -223,7 +223,6 @@ const SnapTool = {
 const FlipTool = {
     leftDown : function(position){
         if( Editor.selection.polygon ){
-            var polygon = Editor.selection.polygon;
             if( shift_on ){
                 // Flip polygon vertically
                 for( vertex_index in Editor.selection.polygon.vertices ){
@@ -246,7 +245,12 @@ const FlipTool = {
     middleDown : function(position){},
     middleDrag : function(position){},
     middleUp : function(position){},
-    rightDown : function(position){},
+    rightDown : function(position){
+        if( Editor.selection.polygon ){
+            // Flip polygon normals
+            Editor.selection.polygon.vertices.reverse();
+        }
+    },
     rightDrag : function(position){},
     rightUp : function(position){},
 };

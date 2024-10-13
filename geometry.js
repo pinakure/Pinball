@@ -1,7 +1,9 @@
 const Geometry = [
+    new Polygon(40, 211,[255,0,0],[ new Vertex(1, 52),new Vertex(-9, 52),new Vertex(-24, 37),new Vertex(-24, -57),new Vertex(-22, -59),new Vertex(-8, -59),new Vertex(8, -43),new Vertex(39, 20),new Vertex(39, 21),new Vertex(31, 37),new Vertex(20, 42), ], 'flipperramp_l'),
+    new Polygon(167, 210,[255,0,0],[ new Vertex(-20, 43),new Vertex(-31, 38),new Vertex(-39, 22),new Vertex(-39, 21),new Vertex(-8, -42),new Vertex(8, -58),new Vertex(22, -58),new Vertex(24, -56),new Vertex(24, 38),new Vertex(9, 53),new Vertex(-1, 53), ], 'flipperramp_r'),
     new Polygon(232, 318,[255,0,0],[ new Vertex(0, 1),new Vertex(0, -294),new Vertex(7, -294),new Vertex(7, 1), ], 'ramp_r'),
-    new Polygon(232, 24,[255,0,0],[ new Vertex(0, 0),new Vertex(-2, -5),new Vertex(-5, -13),new Vertex(-11, -19),new Vertex(-15, -21),new Vertex(-21, -23),new Vertex(-21, -24),new Vertex(7, -24),new Vertex(7, 0), ], 'ramp_tr'),
-    new Polygon(182, 11,[255,0,0],[ new Vertex(4, 4),new Vertex(6, 0),new Vertex(12, -6),new Vertex(16, -8),new Vertex(22, -10),new Vertex(22, -11),new Vertex(-6, -11),new Vertex(-6, 4), ], 'ramp_tl'),
+    new Polygon(236, 170,[255,0,0],[ new Vertex(-4, -146),new Vertex(-6, -151),new Vertex(-9, -159),new Vertex(-15, -165),new Vertex(-19, -167),new Vertex(-25, -169),new Vertex(-25, -170),new Vertex(3, -170),new Vertex(3, -146), ], 'ramp_tr'),
+    new Polygon(185, 6,[255,0,0],[ new Vertex(-9, 9),new Vertex(-9, -6),new Vertex(19, -6),new Vertex(19, -5),new Vertex(13, -3),new Vertex(9, -1),new Vertex(3, 5),new Vertex(1, 9), ], 'ramp_tl'),
     new Polygon(211, 1,[255,0,0],[ new Vertex(0, 0),new Vertex(-7, 0),new Vertex(-7, 0),new Vertex(0, 0), ], 'ramp_tt'),
 ];
 
