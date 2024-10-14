@@ -81,7 +81,7 @@ Polygon.prototype.resetFlags = function(){
 Polygon.prototype.checkMouse = function( x, y ){
     for(vertex_index in this.vertices){
         var vertex = this.vertices[vertex_index];
-        if( vertex.touches(x,y,2,this.x, this.y) ){
+        if( vertex.touches(x,y,4,this.x, this.y) ){
             vertex.active = true;
             return vertex;
         }

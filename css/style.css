@@ -1,0 +1,189 @@
+:root {
+    --window-color: #a0a0a0;
+    --infobar-width: 240px;
+}
+
+* {
+    user-select: none;
+}
+html {
+    height          : 100%;
+}
+body {
+    background-color: #000;
+    height          : 100%;
+    padding         : 0px;
+    margin          : 0px;
+    overflow        : hidden;
+    text-align      : center;
+}
+
+#display_text ,
+#display_canvas {
+    border          : none;
+    outline         : none;
+    width           : 100%;
+    max-height      : 80px;
+    min-height      : 80px;
+    user-select     : none !important;
+    pointer-events  : none !important;
+    position        : absolute;
+    top             : 0px;
+    left            : 0px;
+    margin          : 0px !important;
+    
+}
+
+#display_canvas {
+    background-color: #442200;
+    z-index         : 0;
+    max-height      : 70px;
+    min-height      : 70px;
+}
+
+#display_text {
+    z-index         : 1;
+    font-family     : 'display';
+    font-size       : 64px;
+    text-align      : center;
+    vertical-align  : top;
+    height          : 96px !important;
+    margin-top      : -12px !important;
+    color           : #ff9900;    
+    background-color: transparent;
+}
+
+canvas {
+    width           : calc(100% / 2);
+    height          : calc(100% - 70px);
+    background-color: #180018;
+    position        : absolute;
+    top             : 70px;
+    left            : calc(100% / 4);
+    cursor          : crosshair;
+}
+
+canvas {
+    image-rendering: pixelated;
+}
+
+.blink.slow { animation: blinking 500ms linear 0s infinite alternate;}
+.blink.mid  { animation: blinking 250ms linear 0s infinite alternate;}
+.blink.fast { animation: blinking 125ms linear 0s infinite alternate;}
+
+@keyframes blinking {
+     0%    { opacity: 0%; }
+    47%   { opacity:  0%; }
+    50%   { opacity: 100%; }
+    97%   { opacity: 100%; }
+}
+
+#boss {
+    display:inline-block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0px;
+    left:0px;
+    background-image: url('boss-screen.png');
+    background-repeat: no-repeat;
+    background-color: #000;
+    z-index: 1000;
+}
+#infobar > table > tbody > tr > td:nth-child(2){
+    text-align: right;
+}
+#infobar > table {
+    width: 100%; 
+    padding-right: 8px;
+}
+table {
+    width: 100%;
+}
+#infobar {
+    font-family: ProggySmallTT;
+    position: absolute;
+    top: 70px;
+    right: 0px;
+    width: 240px;
+    height: calc(100% - 70px);
+    background-color: #020;;
+    color: #0f0;
+    text-align: right;
+    text-shadow: 1px 1px 0px #080;
+}
+
+#toolbar {
+    width: 48px;
+ /*   height: 128px;*/
+    position: absolute;
+    top: 72px;
+    left: 0px;
+    background-color   : var(--window-color);
+    box-shadow: 4px 4px 0px #224a;
+    padding: 2px 2px 2px 2px;
+    text-align: left;
+}
+
+.toolbar-button.selected {
+    border-style: inset;
+    background-color: #888;
+}
+
+.toolbar-button {
+    display: inline-block;
+    text-align: center;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    box-sizing: border-box;
+    width   : 24px;
+    height  : 24px;
+    border-width: 1px;
+    outline-width: 1px;
+    outline-color: #aaa;
+    border-color: #aaa;
+    border-radius: 3px;
+
+    outline-style: inset;
+    background-color   : var(--window-color);
+}
+/*----------------------------------------------------
+  CUSTOM ICONS
+------------------------------------------------------*/
+.fa-v {
+    content: 'V';
+    font-family: courier;
+    font-weight: 800;;
+}
+
+/*----------------------------------------------------
+  POLYGON INFO PANEL
+------------------------------------------------------*/
+#polygon-info > pre {
+    text-align: center;
+}
+#polygon-info {
+    position: absolute;
+    display: inline-block;
+    bottom: 0px;
+    left: 0px;
+    padding: 0px 0px 0px 0px;
+    text-align: center;
+    height: 50%;
+    width: var(--infobar-width);
+    background: #000030;
+    color: #0040f0;
+}
+
+input {
+    background-color: #00f8;
+    border: none;
+    font-family: 'ProggySmallTT';
+    padding: 0px 0px 0px 0px;
+    font-size: 15px;
+    height: 16px;
+    font-weight: 600;
+    outline: none;
+    border-bottom: 1px solid #08f;
+    color: #08f;
+}
