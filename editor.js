@@ -12,6 +12,12 @@ var Editor = {
 
     grid_size           : 4,
 
+    polygon_info        : null,
+
+    last_selection      : {
+        polygon : null,
+        vertex  : null,
+    },
     selection           : {
         polygon : null,
         vertex  : null,
@@ -30,6 +36,7 @@ var Editor = {
         Infobar.init();
         Infobar.selectTool('polygon');
         this.initialized = true;
+        this.polygon_info = document.getElementById('polygon-info');
     },
 
     resetSelection : function(){
@@ -90,6 +97,31 @@ var Editor = {
             dx = Editor.mouse_position.x;
             dy = Editor.mouse_position.y;
             Screen.line(sx,sy,dx,dy,128,0,128);
+        }
+        if(Editor.selection.polygon == null){
+            this.polygon_info.innerHTML = '';
+            Editor.last_selection.polygon = null;
+            Editor.last_selection.vertex = null;
+        } else {
+            if(
+                (Editor.selection.polygon != Editor.last_selection.polygon)
+                ||
+                (Editor.selection.vertex != Editor.last_selection.vertex)
+            ){
+                this.polygon_info.innerHTML = `<div style="font-family: 'ProggySmallTT'; text-align: left !important; margin: 0px 0px 0px 0px; padding 0px 0px 0px 0px;">
+                Polygon Name: '${ this.selection.polygon.name }'
+                <hr style="border-color: #00f"/>
+                Polygon Center:<br/>
+                x : ${ this.selection.polygon.x }<br/>
+                y : ${ this.selection.polygon.y }<br/>
+                <hr style="border-color: #00f"/>
+                Vertex:<br/>
+                x : ${ this.selection.polygon.x }<br/>
+                y : ${ this.selection.polygon.y }<br/>
+                </div>`;
+                Editor.last_selection.polygon = Editor.selection.polygon;
+                Editor.last_selection.vertex = Editor.selection.vertex;
+            }
         }
     },
 

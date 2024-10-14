@@ -1,3 +1,9 @@
+:root {
+    --window-color: #a0a0a0;
+    --infobar-width: 240px;
+}
+
+
 * {
     user-select: none;
 }
@@ -113,7 +119,7 @@ table {
     position: absolute;
     top: 72px;
     left: 0px;
-    background-color   : #a0a0a0;
+    background-color   : var(--window-color);
     box-shadow: 4px 4px 0px #224a;
     padding: 2px 2px 2px 2px;
     text-align: left;
@@ -139,5 +145,24 @@ table {
     border-radius: 3px;
 
     outline-style: inset;
-    background-color   : #a0a0a0;
+    background-color   : var(--window-color);
+}
+
+/*----------------------------------------------------
+  POLYGON INFO PANEL
+------------------------------------------------------*/
+#polygon-info > pre {
+    text-align: center;
+}
+#polygon-info {
+    position: absolute;
+    display: inline-block;
+    bottom: 0px;
+    left: 0px;
+    padding: 0px 0px 0px 0px;
+    text-align: center;
+    height: 50%;
+    width: var(--infobar-width);
+    background: #000030;
+    color: #0040f0;
 }
