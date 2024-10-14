@@ -147,6 +147,14 @@ table {
     outline-style: inset;
     background-color   : var(--window-color);
 }
+/*----------------------------------------------------
+  CUSTOM ICONS
+------------------------------------------------------*/
+.fa-v {
+    content: 'V';
+    font-family: courier;
+    font-weight: 800;;
+}
 
 /*----------------------------------------------------
   POLYGON INFO PANEL

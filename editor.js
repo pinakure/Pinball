@@ -9,6 +9,8 @@ var Editor = {
     snap_to_grid        : false,
 
     draw_normals        : false,
+    vertical_axis       : false,
+    horizontal_axis     : false,
 
     grid_size           : 4,
 
@@ -37,6 +39,8 @@ var Editor = {
         Infobar.selectTool('polygon');
         this.initialized = true;
         this.polygon_info = document.getElementById('polygon-info');
+        Editor.selection.polygon = null;
+        Editor.selection.vertex = null;
     },
 
     resetSelection : function(){
@@ -109,7 +113,7 @@ var Editor = {
                 (Editor.selection.vertex != Editor.last_selection.vertex)
             ){
                 this.polygon_info.innerHTML = `<div style="font-family: 'ProggySmallTT'; text-align: left !important; margin: 0px 0px 0px 0px; padding 0px 0px 0px 0px;">
-                Polygon Name: '${ this.selection.polygon.name }'
+                Polygon Name: <input type="text" id="polygon-name" name="polygon-name" onchange="Editor.selection.polygon.name=this.value;return 0;" value="${ this.selection.polygon.name }">
                 <hr style="border-color: #00f"/>
                 Polygon Center:<br/>
                 x : ${ this.selection.polygon.x }<br/>
@@ -145,20 +149,8 @@ function toggle(name){
         status = true;
     }
 
-    switch(name){
-        case 'grid':
-            Editor.snap_to_grid = status;
-            text = 'Snap to grid';
-            break;
-        case 'backdrop':
-            Table.render_backdrop = status;
-            text = 'Show bg image';
-            break;
-        case 'normals':
-            Editor.draw_normals = status;
-            text = 'Normals';
-            break;
-    }
-    Display.text.blink(`${text} ${status ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
-            
+    var info = Infobar.toggles[name];
+
+    eval(`${info.variable} = ${status};`);
+    Display.text.blink(`${ info.title } ${ status ? 'en' : 'dis' }abled`, BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
 }

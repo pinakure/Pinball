@@ -60,7 +60,7 @@ var Infobar = {
             },
         },
         expand : {
-            icon    : 'expand',
+            icon    : 'expand-arrows',
             title   : 'Expand / Shrink',
             hotkey  : 'X',
             keycode : KEY_X,
@@ -90,7 +90,7 @@ var Infobar = {
             },
         },
         flip  : {
-            icon    : 'arrows-alt-h',
+            icon    : 'repeat',
             title   : 'Flip tool',
             hotkey  : 'F',
             keycode : KEY_F,
@@ -104,27 +104,88 @@ var Infobar = {
                 alt : {},
                 ctrl : {},
             },
-        },        
+        },
+        clone  : {
+            icon    : 'stamp',
+            title   : 'Clone tool',
+            hotkey  : 'C',
+            keycode : KEY_C,
+            tool    : TOOL.CLONE,
+            actions : {
+                LB : 'Clone vertex',
+                shift : {
+                    LB : 'Clone Polygon',
+                },
+                alt : {},
+                ctrl : {},
+            },
+        },
     },
 
     toggles : {
         grid : {
             icon    : 'th',
+            variable: 'Editor.snap_to_grid',
             hotkey  : 'G',
             keycode : KEY_G,
             title   : 'Toggle Grid Snapping',
+            default : false,
         },
         backdrop : {
             icon    : 'image',
+            variable: 'Table.render_backdrop',
             hotkey  : 'I',
             keycode : KEY_I,
             title   : 'Toggle Backdrop Image',
+            default : false,
+        },
+        h_axis : {
+            icon    : 'arrows-h',
+            variable: 'Editor.horizontal_axis',
+            hotkey  : 'H',
+            keycode : KEY_H,
+            title   : 'Toggle Horizontal Axis',
+            default : true,
+        },
+        v_axis : {
+            icon    : 'arrows-v',
+            variable: 'Editor.vertical_axis',
+            hotkey  : 'V',
+            keycode : KEY_V,
+            title   : 'Toggle Vertical Axis',
+            default : true,
+        },
+        flippers : {
+            icon    : 'truck-ramp',
+            variable: 'Table.draw_flippers',
+            hotkey  : '1',
+            keycode : KEY_1,
+            title   : 'Toggle flippers',
+            default : true,
+        },
+        bouncers : {
+            icon    : 'triangle',
+            variable: 'Table.draw_bumpers',
+            hotkey  : '2',
+            keycode : KEY_2,
+            title   : 'Toggle bouncers',
+            default : true,
+        },
+        polygons : {
+            icon    : 'hexagon',
+            variable: 'Table.draw_polygons',
+            hotkey  : '3',
+            keycode : KEY_3,
+            title   : 'Toggle Polygons',
+            default : true,
         },
         normals : {
             icon    : 'external-link-square-alt',
+            variable: 'Editor.draw_normals',
             hotkey  : 'N',
             keycode : KEY_N,
             title   : 'Toggle Normals',
+            default : false,
         },
     },
 
@@ -140,6 +201,9 @@ var Infobar = {
         for(key in Infobar.toggles){
             var info = Infobar.toggles[key];            
             node.innerHTML += `<button onclick="toggle('${key}')" class="toolbar-button toggle" id="${key}" title="${info.title} (${info.hotkey})"><i class="fa fa-${info.icon}"></i></button>`;
+            if(info.default){
+                document.getElementById(key).click();
+            }
         }        
     },
     

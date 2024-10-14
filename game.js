@@ -15,7 +15,7 @@ var Game = {
         Screen.init();
         Display.init();
         Table.init();
-        Editor.init();
+        Editor.init();        
         Game.new();
         Game.update();
         try{

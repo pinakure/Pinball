@@ -255,6 +255,42 @@ const FlipTool = {
     rightUp : function(position){},
 };
 
+const CloneTool = {
+    leftDown : function(position){
+        if( Editor.selection.polygon ){
+            if( shift_on ){
+                // Clone Polygon
+                var vertices = [];
+                var polygon = Editor.selection.polygon;
+                for(vertex_index in polygon.vertices ){
+                    var vertex = polygon.vertices[ vertex_index];
+                    vertices.push( new Vertex( vertex.x, vertex.y ) );                    
+                }
+                polygon = new Polygon( polygon.x+2, polygon.y+2, polygon.color, vertices, polygon.name );
+                Table.geometry.push( polygon );
+                Editor.selection.polygon = polygon;
+            } else {
+                // Clone vertex
+                if( Editor.selection.vertex ){
+                    var polygon = Editor.selection.polygon;
+                    var vertex = Editor.selection.vertex;                    
+                    var position = polygon.vertices.indexOf(vertex);
+                    polygon.vertices.splice( position+1, 0, new Vertex( vertex.x+2, vertex.y+2 ) );
+                }
+                Editor.selection.polygon.consolidate();            
+            }
+        }
+    },
+    leftDrag : function(position){},
+    leftUp : function(position){},
+    middleDown : function(position){},
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
+};
+
 const ExpandTool = {
     
     drag : null,
@@ -303,24 +339,12 @@ const ExpandTool = {
         this.drag = null;
         this.last_position = null;
     },
-    middleDown : function(position){
-
-    },
-    middleDrag : function(position){
-
-    },
-    middleUp : function(position){
-
-    },
-    rightDown : function(position){
-
-    },
-    rightDrag : function(position){
-
-    },
-    rightUp : function(position){
-
-    },
+    middleDown : function(position){},
+    middleDrag : function(position){},
+    middleUp : function(position){},
+    rightDown : function(position){},
+    rightDrag : function(position){},
+    rightUp : function(position){},
 };
 
 var Tools = {
@@ -333,6 +357,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.leftDown(position); break;
             case TOOL.FLIP      : FlipTool.leftDown(position); break;
             case TOOL.EXPAND    : ExpandTool.leftDown(position); break;
+            case TOOL.CLONE     : CloneTool.leftDown(position); break;
         }
         navigator.clipboard.writeText( Table.serialize() );
         return false;
@@ -346,6 +371,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.leftDrag(position); break;
             case TOOL.FLIP      : FlipTool.leftDrag(position); break;
             case TOOL.EXPAND    : ExpandTool.leftDrag(position); break;
+            case TOOL.CLONE     : CloneTool.leftDrag(position); break;
         }
         Table.draw();
         Editor.update();
@@ -361,6 +387,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.leftUp(position); break;
             case TOOL.FLIP      : FlipTool.leftUp(position); break;
             case TOOL.EXPAND    : ExpandTool.leftUp(position); break;
+            case TOOL.CLONE     : CloneTool.leftUp(position); break;
         }
         Editor.update();
         navigator.clipboard.writeText( Table.serialize() );
@@ -376,6 +403,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.middleDown(position); break;
             case TOOL.FLIP      : FlipTool.middleDown(position); break;
             case TOOL.EXPAND    : ExpandTool.middleDown(position); break;
+            case TOOL.CLONE     : CloneTool.middleDown(position); break;
         }
         navigator.clipboard.writeText( Table.serialize() );
         return false;
@@ -389,6 +417,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.middleDrag(position); break;
             case TOOL.FLIP      : FlipTool.middleDrag(position); break;
             case TOOL.EXPAND    : ExpandTool.middleDrag(position); break;
+            case TOOL.CLONE     : CloneTool.middleDrag(position); break;
         }
         Table.draw();
         Editor.update();
@@ -404,6 +433,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.middleUp(position); break;
             case TOOL.FLIP      : FlipTool.middleUp(position); break;
             case TOOL.EXPAND    : ExpandTool.middleUp(position); break;
+            case TOOL.CLONE     : CloneTool.middleUp(position); break;
         }
         Editor.update();
         navigator.clipboard.writeText( Table.serialize() );
@@ -418,6 +448,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.rightDown(position); break;
             case TOOL.FLIP      : FlipTool.rightDown(position); break;
             case TOOL.EXPAND    : ExpandTool.rightDown(position); break;
+            case TOOL.CLONE     : CloneTool.rightDown(position); break;
         }
         navigator.clipboard.writeText( Table.serialize() );
     },
@@ -430,6 +461,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.rightDrag(position); break;
             case TOOL.FLIP      : FlipTool.rightDrag(position); break;
             case TOOL.EXPAND    : ExpandTool.rightDrag(position); break;
+            case TOOL.CLONE     : CloneTool.rightDrag(position); break;
         }
         Table.draw();
         Editor.update();
@@ -445,6 +477,7 @@ var Tools = {
             case TOOL.SNAP      : SnapTool.rightUp(position); break;
             case TOOL.FLIP      : FlipTool.rightUp(position); break;
             case TOOL.EXPAND    : ExpandTool.rightUp(position); break;
+            case TOOL.CLONE     : CloneTool.rightUp(position); break;
         }        
         Editor.update();
         navigator.clipboard.writeText( Table.serialize() );

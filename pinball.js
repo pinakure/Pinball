@@ -9,16 +9,17 @@ function  getMousePos(evt) {
     scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
     if( Editor.snap_to_grid ){
         return {
-            x: parseInt(parseInt((evt.clientX - rect.left) * scaleX )/Editor.grid_size)*Editor.grid_size, 
-            y: parseInt(parseInt((evt.clientY - rect.top ) * scaleY )/Editor.grid_size)*Editor.grid_size, 
+            x: Editor.horizontal_axis ? parseInt(parseInt((evt.clientX - rect.left) * scaleX )/Editor.grid_size)*Editor.grid_size : Editor.mouse_position.x, 
+            y: Editor.vertical_axis ? parseInt(parseInt((evt.clientY - rect.top ) * scaleY )/Editor.grid_size)*Editor.grid_size : Editor.mouse_position.y, 
         }
     } else return {
-        x: parseInt((evt.clientX - rect.left) * scaleX ), // scale mouse coordinates after they have
-        y: parseInt((evt.clientY - rect.top ) * scaleY ), // been adjusted to be relative to element
+        x: Editor.horizontal_axis ? parseInt((evt.clientX - rect.left) * scaleX ) : Editor.mouse_position.x, // scale mouse coordinates after they have
+        y: Editor.vertical_axis ? parseInt((evt.clientY - rect.top ) * scaleY ) : Editor.mouse_position.y, // been adjusted to be relative to element
     }
 }
 
 function handleKeyUp( event ){
+    if(document.activeElement.id=='polygon-name')return;
     switch(event.keyCode){
         case KEY_SHIFT:
             shift_on = false;
@@ -33,6 +34,7 @@ function handleKeyUp( event ){
 }
 
 function handleKeyDown( event ){
+    if(document.activeElement.id=='polygon-name')return;
     switch(event.keyCode){
         case KEY_ENTER:
             if(Game.step_by_step) Game.update();

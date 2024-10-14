@@ -14,11 +14,12 @@ var Table = {
 
     render_colission_bitmap : true,
 
-    geometry : Geometry,
-    
-    flippers : Flippers,
-    
-    bumpers  : Bumpers,
+    draw_flippers   : false,
+    draw_bumpers    : false,
+    draw_polygons   : false,    
+    geometry        : Geometry,
+    flippers        : Flippers,
+    bumpers         : Bumpers,
 
     init : function(){
 
@@ -63,6 +64,7 @@ var Table = {
             bumper.consolidate();
         }
         Editor.selection.polygon = null;
+        Editor.selection.vertex = null;
 
     },
 
@@ -153,14 +155,17 @@ var Table = {
             }
         }
         
+        if(Table.draw_polygons)
         for(polygon_index in Table.geometry){
             var polygon = Table.geometry[polygon_index];
             polygon.draw();
         }
+        if(Table.draw_flippers)
         for(flipper_index in Table.flippers){
             var flipper = Table.flippers[flipper_index];
             flipper.draw();
         }
+        if(Table.draw_bumpers)
         for(bumper_index in Table.bumpers){
             var bumper = Table.bumpers[bumper_index];
             bumper.draw();
