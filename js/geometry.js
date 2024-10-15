@@ -16,6 +16,7 @@ const Geometry = [
     new Polygon(211, 191,[255,0,0],[ new Vertex(-11, 76),new Vertex(-11, -77),new Vertex(12, -77),new Vertex(12, 76), ], 'center_wall'),
     new Polygon(208, 110,[255,0,0],[ new Vertex(-8, 4),new Vertex(-8, 4),new Vertex(-11, -3),new Vertex(15, -3),new Vertex(15, 4), ], 'center_wall_middle'),
     new Polygon(62, 6,[255,0,0],[ new Vertex(-6, -6),new Vertex(8, -6),new Vertex(8, 9),new Vertex(-6, 5), ], 'new poly'),
+    new Polygon(64, 319,[255,0,0],[ new Vertex(0, -1),new Vertex(79, -1),new Vertex(79, 0),new Vertex(0, 0), ], 'hole'),
 ];
 
 const Bumpers = [
