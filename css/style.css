@@ -53,13 +53,23 @@ body {
     background-color: transparent;
 }
 
-canvas {
+#canvas-wrapper {
     width           : calc(100% / 2);
     height          : calc(100% - 70px);
-    background-color: #180018;
     position        : absolute;
     top             : 70px;
     left            : calc(100% / 4);
+    background-color: #f0f;
+    overflow-x      : auto;
+    overflow-y      : auto;
+}
+#canvas {
+    width           : 100%;
+    height          : 100%;
+    background-color: #180018;
+    position        : absolute;
+    top             : 0px;
+    left            : 0px;
     cursor          : crosshair;
 }
 
@@ -186,4 +196,9 @@ input {
     outline: none;
     border-bottom: 1px solid #08f;
     color: #08f;
+}
+
+.zoom-2 {
+    width: 200% !important;
+    height:200% !important;
 }
