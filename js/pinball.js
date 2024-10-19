@@ -72,6 +72,18 @@ function handleKeyDown( event ){
             break;
         default: 
             if(Editor.initialized){
+                
+                if(alt_on){
+                    switch(event.keyCode){
+                        case KEY_1: return Editor.setZoom(1);
+                        case KEY_2: return Editor.setZoom(2);
+                        case KEY_3: return Editor.setZoom(3);
+                        case KEY_4: return Editor.setZoom(4);
+                        default:
+                            break;
+                    }
+                }
+                
                 for(key in Infobar.tools){
                     var info = Infobar.tools[key];
                     if(event.keyCode == info.keycode) {
@@ -86,6 +98,8 @@ function handleKeyDown( event ){
                         return;            
                     }
                 }
+
+                
             }
             console.log( event.keyCode );
             return;

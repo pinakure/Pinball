@@ -134,6 +134,10 @@ var Editor = {
         Editor.draw();
         return true;
     },
+    
+    setZoom : function(level){
+        document.getElementById('canvas').className=`zoom-${level}`;
+    },
 
 };
 

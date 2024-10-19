@@ -30,6 +30,7 @@ var Display = {
         init : function(){
             Display.canvas.node     = document.getElementById( 'display_canvas' );
             Display.canvas.context  = Display.canvas.node.getContext( '2d' );
+            Display.canvas.context.fillStyle = 'red';
             Display.canvas.context.font = '64px display';
             Display.canvas.data     = Display.canvas.context.getImageData( 0, 0, Display.canvas.width, Display.canvas.height );
             //Display.canvas.putPixel(10,10,Display.canvas.color.r,Display.canvas.color.g,Display.canvas.color.b);
@@ -87,6 +88,7 @@ var Display = {
                 Display.text.node.className = '';
                 Display.switchMode(Display.next_mode);
             }, time);
+            //Display.canvas.context.fillText(text,0,32);     
         },
 
         set : function( text ){
@@ -99,7 +101,7 @@ var Display = {
         Display.canvas.init();
         Display.text.node       = document.getElementById('display_text');
         Display.text.blink("Start", BLINK_MODE_FAST, 1000, DISPLAY_MODE_SCORE);
-        Display.canvas.context.fillText('Hello World',0,0);        
+           
     },
     
     attractMode : function(){

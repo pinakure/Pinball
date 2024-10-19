@@ -54,11 +54,11 @@ body {
 }
 
 #canvas-wrapper {
-    width           : calc(100% / 2);
+    width           : calc( calc(100% - var(--infobar-width)) - var(--infobar-width));
     height          : calc(100% - 70px);
     position        : absolute;
     top             : 70px;
-    left            : calc(100% / 4);
+    left            : var(--infobar-width);
     background-color: #f0f;
     overflow-x      : auto;
     overflow-y      : auto;
@@ -115,7 +115,7 @@ table {
     position: absolute;
     top: 70px;
     right: 0px;
-    width: 240px;
+    width: var(--infobar-width);
     height: calc(100% - 70px);
     background-color: #020;;
     color: #0f0;
@@ -201,4 +201,12 @@ input {
 .zoom-2 {
     width: 200% !important;
     height:200% !important;
+}
+.zoom-3 {
+    width: 300% !important;
+    height:300% !important;
+}
+.zoom-4 {
+    width: 400% !important;
+    height:400% !important;
 }

@@ -12,8 +12,8 @@ const KEY_ENTER = 13;
 const KEY_SPACE = 32;
 const KEY_SCAPE = 27;
 const KEY_SHIFT = 16;
-const KEY_CTRL  = 16;
-const KEY_ALT   = 16;
+const KEY_CTRL  = 17;
+const KEY_ALT   = 18;
 
 const KEY_TAB   = 9;
 const KEY_0     = 48;
