@@ -14,17 +14,94 @@ function polarize(x){
 }
 
 
-Ball.prototype.update = function(){
+function Segment(sx=0,sy=0,dx=0,dy=0){
+    this.sx = sx;
+    this.sy = sy;
+    this.dx = dx;    
+    this.dy = dy;    
+}
+
+Segment.prototype.isInside = function(bounding_box={sx:0,sy:0,dx:1,dy:1}){
+    var points = Screen.getLine(
+        bounding_box.sx,
+        bounding_box.sy,
+        bounding_box.dx,
+        bounding_box.dy,
+    );
+    for(point_index in points){
+        var point = points[ point_index ];
+        if( ( point[0] >= this.sx )
+          &&( point[1] >= this.sy )
+          &&( point[0] <= this.dx )
+          &&( point[1] <= this.dx )
+        ){
+            return true;
+        }
+    }
+    return false;
+}
+
+Segment.prototype.intersects = function(edge={sx:0,sy:0,dx:1,dy:1}){
+    var x1 = this.sx, y1 = this.sy, x2 = this.dx, y2 = this.dy;
+    var x3 = edge.sx, y3 = edge.sy, x4 = edge.dx, y4 = edge.dy;
+    return (
+        (((x4-x3)*(y1-y3))-((x1-x3)*(y4-y3)))
+        *
+        (((x4-x3)*(y2-y3))-((x2-x3)*(y4-y3))) 
+    ) <= 0;
+}
+
+Ball.prototype.updateDeltas = function(){
     /* Solve deltas */
-    return 0;
+    this.delta.y += 0.0981;
+    this.delta.x *= 0.99;
+
+    /* Check colissions with geometry */
+    var segment = new Segment(
+        parseInt(this.x), 
+        parseInt(this.y), 
+        parseInt(this.x + this.delta.x), 
+        parseInt(this.y + this.delta.y), 
+    );
+    for( polygon_index in Table.geometry){
+        var polygon = Table.geometry[polygon_index];
+        polygon.bounding_box.active = false;
+    }
+    for( polygon_index in Table.geometry){
+        var polygon = Table.geometry[polygon_index];
+        if( segment.isInside(polygon.bounding_box) ){// detect if segment colissides somewhere in this polygon
+            var last_vertex = polygon.vertices[polygon.vertices.length-1];
+            polygon.bounding_box.active = true;
+            for(vertex_index in polygon.vertices){ 
+                var vertex = polygon.vertices[vertex_index];
+                var edge = {
+                    sx : polygon.x + last_vertex.x,
+                    sy : polygon.y + last_vertex.y,
+                    dx : polygon.x + vertex.x,
+                    dy : polygon.y + vertex.y,
+                };
+                if(segment.intersects(edge)){
+                    // if this polygon edge intersects delta vector (segment), 
+                    // bounce this.delta towards edge normal direction
+                    this.delta.x += polygon.normals[vertex_index].x*2;
+                    this.delta.y += polygon.normals[vertex_index].y*2;
+                    return 0;
+                }// else try next polygon edge
+                last_vertex = vertex;
+            }
+            
+        }// else try next polygon
+    }   
+}
+
+Ball.prototype.update = function(){
+    
+    this.updateDeltas();
 
     const BOUNCE_FACTOR_UP      = 1.0;
     const BOUNCE_FACTOR_DOWN    = 0.55;
     const BOUNCE_FACTOR_LEFT    = 0.95;
 
-    this.delta.y += 0.0981;
-    this.delta.x *= 0.99;
-     
     if(this.y + this.delta.y >= Screen.height-1 ) this.delta.y *= -0.55;
     if(this.y + this.delta.y <= 0               ) this.delta.y *= -1.0;
     
@@ -35,417 +112,15 @@ Ball.prototype.update = function(){
     this.direction = (this.delta.y > 0 ? BALL_DIRECTION_DOWN  : (this.delta.y < 0 ? BALL_DIRECTION_UP   : 0)) 
                    | (this.delta.x > 0 ? BALL_DIRECTION_RIGHT : (this.delta.x < 0 ? BALL_DIRECTION_LEFT : 0));
 
-    /* Solve collisions */
-    /*--------------------------------------------------------------------------------------*/
-    /* A
-        .|. 
-        .V. 
-        ###
-
-        -delta.y
-    */
-    /**/ 
-    if(0){
-
-    }
-    
-    /*--------------------------------------------------------------------------------------*/
-    /* B
-        .|/
-        .V.
-        ##.
-        ..#
-
-        -delta.y
-        +delta.x
-    */
-    else if( Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-    &&       Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-    &&      !Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
-    &&       Table.check( this.x+1, this.y+2, this.delta.x, this.delta.y )
-    &&      (this.delta.y > 0)
-    ){ 
-        console.log('B');
-        this.delta.y *= -1; 
-        this.delta.x = Math.abs(this.delta.x); 
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* C
-        \|.
-        .V.
-        .##
-        #..
-
-        -delta.y
-        -delta.x
-    */
-    else if( Table.check( this.x  , this.y+2, this.delta.x, this.delta.y )
-    &&      !Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-    &&       Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-    &&       Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
-    &&      (this.delta.y > 0)
-    ){ 
-        console.log('C');
-        this.delta.y *= -1;
-        this.delta.x = -Math.abs(this.delta.x); 
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* D
-        \|/
-        .V.
-        .#.
-        #.#
-
-        -delta.y
-        +-delta.x
-    */
-    else if(!Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x-1, this.y+2, this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y+2, this.delta.x, this.delta.y )
-        &&  (this.delta.y > 0)
-    ){ 
-        console.log('D');
-        this.delta.y *= -1; 
-        this.delta.x = polarize(Math.abs(this.delta.x));
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* E 
-        .|/
-        #V.
-        .##
-
-        -delta.y
-        +delta.x
-    */
-    else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
-        &&  (this.delta.y > 0)
-    ){ 
-        console.log('E');
-        this.delta.y *= -1; 
-        this.delta.x = Math.abs(this.delta.x);
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* F
-        \|.
-        .V#
-        ##.
-
-        -delta.y
-        -delta.x
-    */
-    else if(!Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-        &&  !Table.check( this.x  , this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&  (this.delta.y > 0)
-    ){ 
-        console.log('F');
-        this.delta.y *= -1; 
-        this.delta.x = -Math.abs(this.delta.x)*1.1;
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* G
-        .|.
-        #V#
-        .#.
-
-        -delta.y
-    */
-    else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        //&&  !Table.check( this.x  , this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-        &&  (this.delta.y > 0)        
-    ){ 
-        console.log('G');
-        this.delta.y = -Math.abs(this.delta.y)*0.55;
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* H
-        .|.
-        #V.
-        .#\
-        ..#
-
-        delta.x = +abs(delta.y)
-        delta.y *= 0.5
-    */
-    else if( Table.check( this.x-1 , this.y   , this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1 , this.y   , this.delta.x, this.delta.y )
-        &&   Table.check( this.x   , this.y+1 , this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1 , this.y+1 , this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1 , this.y+2 , this.delta.x, this.delta.y )        
-        &&  (this.delta.y > 0)
-    ){ 
-        console.log('H');
-        this.delta.x = Math.abs(this.delta.y);
-        this.delta.y *= 0.5;  /* GUESS */
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* I
-        .|.
-        .V#
-        /#.
-        #..
-
-        delta.x = -abs(delta.y)
-        delta.y *= 0.5
-    */
-    else if(!Table.check( this.x-1 , this.y   , this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1 , this.y   , this.delta.x, this.delta.y )
-        &&   Table.check( this.x   , this.y+1 , this.delta.x, this.delta.y )
-        &&  !Table.check( this.x-1 , this.y+1 , this.delta.x, this.delta.y )
-        &&   Table.check( this.x-1 , this.y+2 , this.delta.x, this.delta.y )
-        &&  (this.delta.y > 0)        
-    ){ 
-        console.log('I');
-        this.delta.x = -Math.abs(this.delta.y);
-        this.delta.y *= 0.5;  /* GUESS */
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* J
-        ###
-        .^.
-        .|.
-
-        +delta.y
-    */
-    else if( Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
-         && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-         && !Table.check( this.x  , this.y  , this.delta.x, this.delta.y )
-         && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-         &&  (this.delta.y < 0)
-    ){ 
-        console.log('J');
-        this.delta.y = Math.abs(this.delta.y);
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* K
-        ##.
-        .^#
-        /|.
-
-        +delta.y
-        -delta.x
-    */
-    else if( Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-         &&  (this.delta.y < 0)
-    ){ 
-        console.log('K');
-        this.delta.y =  Math.abs(this.delta.y);
-        this.delta.x = -Math.abs(this.delta.x);
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* L
-        .##
-        #^.
-        .|\
-
-        +delta.y
-        +delta.x
-    */
-    else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-         &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
-         && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-         &&  (this.delta.y < 0)
-    ){ 
-        console.log('L');
-        this.delta.y = Math.abs(this.delta.y);
-        this.delta.x = Math.abs(this.delta.x);
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* M
-        .#.
-        #^#
-        .|.
-
-        +delta.y
-    */
-    else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-         &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-         &&  (this.delta.y < 0)        
-    ){ 
-        console.log('M');
-        this.delta.y = Math.abs(this.delta.y);
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* N
-        #..
-        .##
-        .^.
-        /|.
-
-        +delta.y
-        -delta.x
-    */
-    else if( Table.check( this.x-1, this.y-2, this.delta.x, this.delta.y )
-         && !Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )         
-         &&  Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
-         &&  (this.delta.y < 0)        
-    ){ 
-        console.log('N');
-        this.delta.y =-Math.abs(this.delta.y)*0.5;
-        this.delta.x =-Math.abs(this.delta.y);
-    }   
-    /*--------------------------------------------------------------------------------------*/
-    /* O
-        ..#
-        ##.
-        .^.
-        .|\
-
-        +delta.y
-        +delta.x
-    */
-    else if( Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-         &&  Table.check( this.x+1, this.y-2, this.delta.x, this.delta.y )
-         && !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
-         && !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-         && !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-         &&  (this.delta.y < 0)
-    ){ 
-        console.log('O');
-        this.delta.y = Math.abs(this.delta.y);
-        this.delta.x = Math.abs(this.delta.x);
-    }   
-    /*--------------------------------------------------------------------------------------*/
-    /* P
-        #.#
-        .#.
-        .^.
-        /|\
-
-        +delta.y
-        +-delta.x
-    */
-    else if( Table.check( this.x-1, this.y-2, this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y-2, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-        &&  (this.delta.y < 0)
-    ){ 
-        console.log('P');
-        this.delta.y *= Math.abs(this.delta.y); 
-        this.delta.x = polarize(Math.abs(this.delta.x));
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* Q
-        #..
-        \#.
-        .^#
-        .|.
-
-        delta.x = -abs(delta.y)
-        delta.y *= 0.5
-        
-    */
-    else if( Table.check( this.x-1, this.y-2, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x-1, this.y-1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-        &&  (this.delta.y < 0)
-    ){ 
-        console.log('Q');
-        this.delta.y *= Math.abs(this.delta.y); 
-        this.delta.x = -Math.abs(this.delta.x);
-    }
-    /*--------------------------------------------------------------------------------------*/
-    /* R
-        ..#
-        .#/
-        #^.
-        .|.
-
-        delta.x = +abs(delta.y)
-        delta.y *= 0.5
-        
-    */
-    else if( Table.check( this.x-1, this.y  , this.delta.x, this.delta.y )
-        &&   Table.check( this.x  , this.y-1, this.delta.x, this.delta.y )
-        &&   Table.check( this.x+1, this.y-2, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1, this.y-1, this.delta.x, this.delta.y )
-        &&  !Table.check( this.x+1, this.y  , this.delta.x, this.delta.y )
-        &&  (this.delta.y < 0)
-    ){ 
-        console.log('R');
-        this.delta.x =  Math.abs(this.delta.y);
-        this.delta.y *= 0.5; 
-    }
-    /*--------------------------------------------------------------------------------------*/
-    else if(    Table.check( this.x  , this.y+1, this.delta.x, this.delta.y )
-        &&      Table.check( this.x-1, this.y+1, this.delta.x, this.delta.y )
-        &&      Table.check( this.x+1, this.y+1, this.delta.x, this.delta.y )
-        &&     (this.delta.y > 0)
-    ){ 
-        console.log('A');
-        this.delta.y *= -Math.abs(this.delta.y);
-    }
-/*--------------------------------------------------------------------------------------*/
-
-
-    
-    if( Table.collidesX( this.x, this.y, this.delta.x )
-    ||( Table.isSolid( this.x+this.delta.x, this.y ))
-    ){
-        if(this.direction & BALL_DIRECTION_LEFT) {
-            this.x-=this.delta.x;
-            this.delta.x = -this.delta.x;
-        } else if(this.direction & BALL_DIRECTION_RIGHT) {
-            this.x-=this.delta.x;
-            this.delta.x = -this.delta.x;
-        }
-    }
     // Apply horizontal force
     this.x += this.delta.x;
     
-    if( Table.collidesY( this.x, this.y, this.delta.y )
-    ||( Table.isSolid( this.x, this.y+this.delta.y ))
-    ){
-        if(this.direction & BALL_DIRECTION_DOWN) {
-            if(Table.isSolid(this.x-1, this.y+this.delta.y)){
-                this.delta.x = Math.abs(this.delta.x)*1.5;
-                this.x++;
-            } else if(Table.isSolid(this.x+1, this.y+this.delta.y)){
-                this.delta.x = -Math.abs(this.delta.x)*1.5;
-                this.x--;
-            } 
-            this.y-=this.delta.y;
-            this.delta.y *= -0.55;
-            //this.delta.x += ((Math.random()*1.0)-0.5)*0.1;
-        } else if(this.direction & BALL_DIRECTION_UP) {
-            this.y+=Math.abs(this.delta.y);
-            this.delta.y *= -1.0;
-            //this.delta.x += ((Math.random()*1.0)-0.5)*0.1;
-        }
-    }
-
     // Apply vertical force
     this.y += this.delta.y;
-    
-   /*this.y += this.delta.y;
-   this.x += this.delta.x;  */  
     
     /* Correct position */
     if(this.y >= Screen.height-1 ) {
         this.y = Screen.height-1;                
     }
+  
 }

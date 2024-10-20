@@ -40,12 +40,14 @@ function Polygon(x, y, color=[255,0,0], vertices=[], name='Unnamed'){
     this.y = y;
     this.color = color;
     this.vertices = vertices;
-    this.name = name;
+    this.normals = [],
+    this.name = name;    
     this.bounding_box = {
         sx : 0,
-        dx : 0,
         sy : 0,
+        dx : 0,
         dy : 0,
+        active:false,
     };
 }
 
@@ -54,8 +56,8 @@ Polygon.prototype.consolidate = function(){
     // 
     var bounding_box = {
         sx : 9999,
-        dx : -9999,
         sy : 9999,
+        dx : -9999,
         dy : -9999,
     };
     for(vertex_index in this.vertices){
@@ -92,7 +94,7 @@ Polygon.prototype.checkMouse = function( x, y ){
 Polygon.prototype.draw = function(){
     
     // Draw bounding box
-    var bounding_box_color = [0,64,0]
+    var bounding_box_color = this.bounding_box.active ? [0,128,0] : [0,64,0];
     Screen.line(
         this.bounding_box.sx, this.bounding_box.sy, 
         this.bounding_box.dx, this.bounding_box.sy,
@@ -144,11 +146,15 @@ Polygon.prototype.draw = function(){
         var distance = Math.sqrt(((vertex.x-last_vertex.x)*(vertex.x-last_vertex.x))+((vertex.y-last_vertex.y)*(vertex.y-last_vertex.y)));
         // draw normal vectors
         if(Math.abs(distance)<1)continue;
+        var normal = {
+            x : (((this.x+vertex.x) - (this.x+last_vertex.x)) / distance) / 2,
+            y : (((this.y+vertex.y) - (this.y+last_vertex.y)) / distance) / 2,
+        };
+        this.normals[vertex_index] = {
+            x : normal.x,
+            y : normal.y,
+        };
         if(Editor.draw_normals){
-            var normal = {
-                x : (((this.x+vertex.x) - (this.x+last_vertex.x)) / distance) / 2,
-                y : (((this.y+vertex.y) - (this.y+last_vertex.y)) / distance) / 2,
-            };
             var vector = {
                 x : normal.x * 16,
                 y : normal.y * 16,

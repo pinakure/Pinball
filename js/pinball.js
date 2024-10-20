@@ -48,6 +48,9 @@ function handleKeyDown( event ){
         case KEY_DOWN:
             break;
         case KEY_SPACE:
+            for(i in Game.balls){
+                Game.balls[i].delta.y -= 16.0;
+            }
             break;
         case KEY_SCAPE:
             break;
