@@ -68,7 +68,12 @@ Polygon.prototype.consolidate = function(){
         if( y < bounding_box.sy ) bounding_box.sy = y;
         if( y > bounding_box.dy ) bounding_box.dy = y;
     }
-    this.bounding_box = bounding_box;
+    this.bounding_box = {
+        sx : bounding_box.sx,
+        sy : bounding_box.sy,
+        dx : bounding_box.dx,
+        dy : bounding_box.dy,
+    }
     Editor.selection.polygon = this;
     return this;
 }

@@ -18,22 +18,22 @@ function Segment(sx=0,sy=0,dx=0,dy=0){
     this.sx = sx;
     this.sy = sy;
     this.dx = dx;    
-    this.dy = dy;    
+    this.dy = dy;
+    this.points = Screen.getLine(
+        this.sx,
+        this.sy,
+        this.dx,
+        this.dy,
+    );    
 }
 
-Segment.prototype.isInside = function(bounding_box={sx:0,sy:0,dx:1,dy:1}){
-    var points = Screen.getLine(
-        bounding_box.sx,
-        bounding_box.sy,
-        bounding_box.dx,
-        bounding_box.dy,
-    );
-    for(point_index in points){
-        var point = points[ point_index ];
-        if( ( point[0] >= this.sx )
-          &&( point[1] >= this.sy )
-          &&( point[0] <= this.dx )
-          &&( point[1] <= this.dx )
+Segment.prototype.isInside = function(bb={sx:0,sy:0,dx:1,dy:1}){
+    for(point_index in this.points){
+        var point = this.points[ point_index ];
+        if( ( point[0] >= bb.sx )
+          &&( point[1] >= bb.sy )
+          &&( point[0] <= bb.dx )
+          &&( point[1] <= bb.dy )
         ){
             return true;
         }
@@ -72,6 +72,7 @@ Ball.prototype.updateDeltas = function(){
         if( segment.isInside(polygon.bounding_box) ){// detect if segment colissides somewhere in this polygon
             var last_vertex = polygon.vertices[polygon.vertices.length-1];
             polygon.bounding_box.active = true;
+            
             for(vertex_index in polygon.vertices){ 
                 var vertex = polygon.vertices[vertex_index];
                 var edge = {
@@ -81,11 +82,19 @@ Ball.prototype.updateDeltas = function(){
                     dy : polygon.y + vertex.y,
                 };
                 if(segment.intersects(edge)){
+                    
                     // if this polygon edge intersects delta vector (segment), 
                     // bounce this.delta towards edge normal direction
-                    this.delta.x += polygon.normals[vertex_index].x*2;
-                    this.delta.y += polygon.normals[vertex_index].y*2;
+                    try{
+                        this.delta.x += polygon.normals[vertex_index].x*2;
+                        this.delta.y += polygon.normals[vertex_index].y*2;
+                    }catch(e){
+                        //debugger
+                        console.error(e);
+                        console.log(polygon);
+                    }
                     return 0;
+                    
                 }// else try next polygon edge
                 last_vertex = vertex;
             }

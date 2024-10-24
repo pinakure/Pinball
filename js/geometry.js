@@ -14,7 +14,7 @@ const Geometry = [
     new Polygon(29, 300,[255,0,0],[ new Vertex(-22, -34),new Vertex(38, -3),new Vertex(41, 0),new Vertex(42, 3),new Vertex(42, 5),new Vertex(35, 19),new Vertex(-29, 19),new Vertex(-29, -34), ], 'underflipper_left'),
     new Polygon(186, 298,[255,0,0],[ new Vertex(-43, 21),new Vertex(-50, 7),new Vertex(-50, 4),new Vertex(-48, 1),new Vertex(-46, -1),new Vertex(15, -31),new Vertex(37, -31),new Vertex(37, 21), ], 'underflipper_right'),
     new Polygon(211, 191,[255,0,0],[ new Vertex(-11, 76),new Vertex(-11, -77),new Vertex(12, -77),new Vertex(12, 76), ], 'center_wall'),
-    new Polygon(208, 110,[255,0,0],[ new Vertex(-8, 4),new Vertex(-8, 4),new Vertex(-11, -3),new Vertex(15, -3),new Vertex(15, 4), ], 'center_wall_middle'),
+    new Polygon(208, 110,[255,0,0],[ new Vertex(-8, 4),,new Vertex(-11, -3),new Vertex(15, -3),new Vertex(15, 4), ], 'center_wall_middle'),
     new Polygon(62, 6,[255,0,0],[ new Vertex(-6, -6),new Vertex(8, -6),new Vertex(8, 9),new Vertex(-6, 5), ], 'new poly'),
     new Polygon(64, 319,[255,0,0],[ new Vertex(0, -1),new Vertex(79, -1),new Vertex(79, 0),new Vertex(0, 0), ], 'hole'),
 ];
